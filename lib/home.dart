@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import './api/base_api.dart';
 import './api/feed_api.dart';
 import 'model/feed.dart';
@@ -31,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   int _page = 1;
   List<Feed> feedList = List();
+  User _user;
 
   @override
   void initState() {
@@ -38,6 +38,11 @@ class _HomePageState extends State<HomePage> {
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
     _fetchData();
+    UserStorage.getInstance().readUser().then((user) {
+      setState(() {
+        _user = user;
+      });
+    });
   }
 
   @override
@@ -45,15 +50,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Rainbow'),
-          leading: IconButton(
-            icon: Icon(
-              Icons.menu,
-              semanticLabel: 'menu',
-            ),
-            onPressed: () {
-              print('Menu button');
-            },
-          ),
           actions: <Widget>[
             IconButton(
               icon: Icon(
@@ -75,12 +71,47 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+        drawer: _buildDrawer(context),
         body: new Stack(
           children: <Widget>[
             _buildFeeds(context),
             _loader(),
           ],
         ));
+  }
+
+  _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: ListView(
+          children: <Widget>[
+            UserAccountsDrawerHeader(
+              accountName: Text(_user.userName),
+              accountEmail: Text(_user.email),
+              currentAccountPicture: new GestureDetector(
+                  onTap: () {},
+                  child: ClipOval(
+                    child: FadeInImage(
+                      placeholder: AssetImage('assets/default-avatar.png'),
+                      image: NetworkImage(_user.avatar),
+                    ),
+                  )
+                  // CircleAvatar(
+                  //   backgroundImage: NetworkImage(_user.avatar),
+                  // ),
+                  ),
+              decoration: BoxDecoration(color: Colors.lightBlue),
+            ),
+            ListTile(
+              title: Text('i like'),
+              trailing: Icon(Icons.favorite, color: Colors.redAccent),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   _scrollListener() {
@@ -182,8 +213,9 @@ class _HomePageState extends State<HomePage> {
                       children: <Widget>[
                         IconButton(
                           icon: Icon(
-                            feed.like ?Icons.favorite : Icons.favorite_border,
-                            semanticLabel: 'like',),
+                            feed.like ? Icons.favorite : Icons.favorite_border,
+                            semanticLabel: 'like',
+                          ),
                           onPressed: () {
                             like(feed);
                           },
@@ -207,14 +239,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void like(Feed feed) {
-     UserStorage.getInstance().readUser().then((user) {
-      if (user != null) {
-        FeedAPI.like(feed.id, !feed.like).then((response){
-          if(response.code == WrapCode.Ok){
+    UserStorage.getInstance().readUser().then((user) {
+      if (user != null && user.id > 0) {
+        FeedAPI.like(feed.id, !feed.like).then((response) {
+          if (response.code == WrapCode.Ok) {
             setState(() {
               feed.like = !feed.like;
               int count = (feed.like ? feed.likeCount + 1 : feed.likeCount - 1);
-              feed.likeCount =  max(count,0);
+              feed.likeCount = max(count, 0);
             });
           }
         });

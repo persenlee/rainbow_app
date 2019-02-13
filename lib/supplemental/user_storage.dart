@@ -19,10 +19,11 @@ class UserStorage {
 
   readUser() async {
     String value = await storage.read(key: 'user');
-    User user;
+    User user = User();
     if (value != null) {
-      user = User();
       user.id = int.parse(value);
+    } else {
+      user.id = 0;
     }
     return user;
   }

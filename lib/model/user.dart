@@ -3,8 +3,15 @@ part 'user.g.dart';
 
 @JsonSerializable()
 class User {
-  User();
+  User({
+    this.id = 0,
+    this.avatar = '',
+    this.email = '',
+    this.userName = '',
+  }
+  );
   int id;
+  String avatar;
   String email;
   String userName;
   int age;

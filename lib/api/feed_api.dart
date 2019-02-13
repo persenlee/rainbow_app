@@ -10,8 +10,7 @@ class FeedAPI {
       ,'perPage':perPage.toString()};
       var response = await BaseAPI.requestUrl(url, HttpMethod.Get, params);
       if (response.code == WrapCode.Ok) {
-        List<int> bodyBytes = response.response.bodyBytes;
-        List list = json.decode(utf8.decode(bodyBytes));
+        List list = response.response.data;
         List<Feed> feedList = new List();
         for (var map in list) {
           String tagStr = map['tags'];

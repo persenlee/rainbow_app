@@ -114,6 +114,8 @@ class _LoginPageState extends State<LoginPage> {
                         backgroundColor: Colors.red,
                         textColor: Colors.white,
                         fontSize: 16.0);
+                  } else {
+                    Navigator.pop(context);
                   }
                 }).catchError((error) {});
               },
