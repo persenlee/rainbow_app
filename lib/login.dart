@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode _passwordFocusNode = FocusNode();
   String _email;
   String _password;
+  bool _loading = false;
   @override
   Widget build(BuildContext context) {
     _usernameController.addListener(() {
@@ -104,7 +105,13 @@ class _LoginPageState extends State<LoginPage> {
                   FocusScope.of(context).requestFocus(_passwordFocusNode);
                   return;
                 }
+                setState(() {
+                  _loading = true;
+                });
                 LoginAPI.login(_email, _password).then((response) {
+                  setState(() {
+                    _loading = false;
+                  });
                   if (response.code == WrapCode.Fail) {
                     Fluttertoast.showToast(
                         msg: response.msg,
@@ -130,7 +137,14 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(decoration: TextDecoration.underline,color: Colors.blue)
 
               ),
-            )
+            ),
+            Center(
+              child: AnimatedOpacity(
+                opacity: _loading ? 1 : 0,
+                child: CircularProgressIndicator(),
+                duration: Duration(milliseconds: 100),
+              ) 
+              ),
           ],
         ),
       ),

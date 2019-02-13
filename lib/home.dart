@@ -18,7 +18,11 @@ import './api/feed_api.dart';
 import 'model/feed.dart';
 import 'model/user.dart';
 import 'dart:math' show max;
+import 'dart:io';
 import 'package:Shrine/supplemental/user_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'gallery.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -31,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   int _page = 1;
   List<Feed> feedList = List();
   User _user;
+  FileImage _localAvatar;
 
   @override
   void initState() {
@@ -51,24 +56,15 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text('Rainbow'),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                semanticLabel: 'search',
-              ),
-              onPressed: () {
-                print('Search button');
-              },
-            ),
-            IconButton(
-              icon: Icon(
-                Icons.tune,
-                semanticLabel: 'filter',
-              ),
-              onPressed: () {
-                print('Filter button');
-              },
-            ),
+            // IconButton(
+            //   icon: Icon(
+            //     Icons.search,
+            //     semanticLabel: 'search',
+            //   ),
+            //   onPressed: () {
+            //     print('Search button');
+            //   },
+            // ),
           ],
         ),
         drawer: _buildDrawer(context),
@@ -91,12 +87,19 @@ class _HomePageState extends State<HomePage> {
               accountName: Text(_user.userName),
               accountEmail: Text(_user.email),
               currentAccountPicture: new GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    _changeAvatar(context);
+                  },
                   child: ClipOval(
-                    child: FadeInImage(
-                      placeholder: AssetImage('assets/default-avatar.png'),
-                      image: NetworkImage(_user.avatar),
-                    ),
+                      child: FadeInImage(
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fitWidth,
+                        placeholder: AssetImage('assets/default-avatar.png'),
+                        image: _localAvatar != null
+                            ? _localAvatar
+                            : NetworkImage(_user.avatar),
+                      ),
                   )
                   // CircleAvatar(
                   //   backgroundImage: NetworkImage(_user.avatar),
@@ -112,6 +115,56 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  _changeAvatar(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.photo_album),
+                title: Text('album'),
+                onTap: () {
+                  _pickImage(ImageSource.gallery);
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.photo_camera),
+                title: Text('camera'),
+                onTap: () {
+                  _pickImage(ImageSource.camera);
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  _pickImage(ImageSource source) {
+    ImagePicker.pickImage(source: source).then((imageFile) {
+      _cropImage(imageFile);
+    });
+  }
+
+  _cropImage(File imageFile){
+    ImageCropper.cropImage(
+      sourcePath: imageFile.path,
+      ratioX: 1.0,
+      ratioY: 1.0,
+      maxWidth: 256,
+      maxHeight: 256,
+      circleShape: true
+    ).then((croppedImageFile){
+      setState(() {
+        _localAvatar = FileImage(croppedImageFile);
+      });
+    });
   }
 
   _scrollListener() {
@@ -193,7 +246,14 @@ class _HomePageState extends State<HomePage> {
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18 / 11,
-              child: Image.network(feed.thumbSrc),
+              child: GestureDetector(
+                child: Image.network(feed.thumbSrc),
+                onTap: (){
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+                    return new GalleryPage(feedList,feedList.indexOf(feed));
+                  }));
+                },
+              ),
             ),
             Expanded(
               child: Padding(

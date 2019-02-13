@@ -28,7 +28,7 @@ class ShrineApp extends StatelessWidget {
       onGenerateRoute: _getRoute,
     );
   }
-  //Navigator.of(context).pushNamed('/new/xxx');
+  //Navigator.of(context).pushNamed('/login');
   Route<dynamic> _getRoute(RouteSettings settings) {
     WidgetBuilder builder;
     switch (settings.name) {
