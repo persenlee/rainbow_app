@@ -7,7 +7,7 @@ class FeedAPI {
     const url = '/feed/feeds';
     try {
       Map params = {'page':page.toString()
-      ,'perPage':perPage.toString()};
+      ,'per_page':perPage.toString()};
       var response = await BaseAPI.requestUrl(url, HttpMethod.Get, params);
       if (response.code == WrapCode.Ok) {
         List list = response.response.data;
@@ -34,6 +34,29 @@ class FeedAPI {
     const url = '/feed/like';
     try {
       Map params = {'id':feedId,'like':like};
+      var response = await BaseAPI.requestUrl(url, HttpMethod.Post, params);
+      return response;
+    } catch (e) {
+    }
+  }
+
+  static report(int feedId,int reportId,String reportReason) async{
+    const url = '/feed/report';
+    try {
+      Map params = {'id':feedId,'reportId':reportId};
+      if(reportReason != null && reportReason.trim().length > 0) {
+        params['report_reason'] = reportReason;
+      }
+      var response = await BaseAPI.requestUrl(url, HttpMethod.Post, params);
+      return response;
+    } catch (e) {
+    }
+  }
+
+  static tag(int feedId,int tagId) async {
+    const url = '/feed/tag';
+    try {
+      Map params = {'id':feedId,'tag_id':tagId};
       var response = await BaseAPI.requestUrl(url, HttpMethod.Post, params);
       return response;
     } catch (e) {

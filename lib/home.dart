@@ -80,7 +80,9 @@ class _HomePageState extends State<HomePage> {
       child: MediaQuery.removePadding(
         context: context,
         removeTop: true,
-        child: ListView(
+        child: Container(
+          color: Colors.blue,
+          child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
               accountName: Text(_user.userName),
@@ -107,11 +109,28 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(color: Colors.lightBlue),
             ),
             ListTile(
-              title: Text('i like'),
-              trailing: Icon(Icons.favorite, color: Colors.redAccent),
-            )
+              title: Text('Profile',style: TextStyle(fontSize: 16,color: Colors.black87),),
+              leading: Icon(Icons.verified_user),
+              
+            ),
+            ListTile(
+              title: Text('Favorite',style: TextStyle(fontSize: 16,color: Colors.black87),),
+              leading: Icon(Icons.favorite, color: Colors.redAccent),
+            ),
+            Divider(
+              color: Colors.grey,
+            ),
+            ListTile(
+              title: Text('Setting',style: TextStyle(fontSize: 16,color: Colors.black87),),
+              leading: Icon(Icons.settings, color: Colors.redAccent),
+            ),
+            ListTile(
+              title: Text('About',style: TextStyle(fontSize: 16,color: Colors.black87),),
+              leading: Icon(Icons.info, color: Colors.redAccent),
+            ),
           ],
         ),
+        ) 
       ),
     );
   }
