@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'model/feed.dart';
 import 'dart:math';
 
 class GalleryPage extends StatefulWidget {
-final List<Feed> feedList = List();
-final int index = 0;
-GalleryPage(feedList,index);
+final List<Feed> feedList;
+final int index ;
+const GalleryPage({Key key,this.feedList,this.index}) : super(key:key);
 @override
   State<StatefulWidget> createState() {
     return _GalleryPageState(feedList,index);
@@ -31,6 +32,7 @@ class _GalleryPageState extends State<GalleryPage> {
         pageOptions: _buidGalleryPageOptions(context),
         pageController: _pageController,
         backgroundDecoration: BoxDecoration(color: Colors.black87),
+        transitionOnUserGestures: true,
       ),
     );
   }
@@ -40,10 +42,10 @@ class _GalleryPageState extends State<GalleryPage> {
       return PhotoViewGalleryPageOptions(
         imageProvider: NetworkImage(feed.src),
         heroTag: feed.id.toString(),
-        minScale: 1,
-        initialScale: 1,
-        maxScale: 3
+        initialScale: PhotoViewComputedScale.contained,
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.contained * 3
       );
-    });
+    }).toList();
   }
 }

@@ -247,10 +247,14 @@ class _HomePageState extends State<HomePage> {
             AspectRatio(
               aspectRatio: 18 / 11,
               child: GestureDetector(
-                child: Image.network(feed.thumbSrc),
+                child: Hero(
+                  child: Image.network(feed.thumbSrc),
+                  tag: feed.id.toString(),
+                  transitionOnUserGestures: true,
+                ),
                 onTap: (){
                   Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-                    return new GalleryPage(feedList,feedList.indexOf(feed));
+                    return new GalleryPage(feedList:feedList,index:feedList.indexOf(feed));
                   }));
                 },
               ),
