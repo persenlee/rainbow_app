@@ -13,7 +13,6 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import './api/user_api.dart';
 import './api/base_api.dart';
 import 'package:Shrine/supplemental/validate.dart';
@@ -30,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode _userNameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final _loginButtonKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey();
   String _email;
   String _password;
   String _emailErrorText = '';
@@ -45,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
       _password = _passwordController.text;
     });
     return Scaffold(
+      key: _scaffoldState,
       body: SafeArea(
           child: Stack(
         children: <Widget>[
@@ -105,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _passwordController,
                 onEditingComplete: () {
                   if(_checkPassword()){
-                    _doLogin();
+                    // _doLogin();
                   }
                 },
               ),
@@ -192,23 +193,21 @@ class _LoginPageState extends State<LoginPage> {
         _loading = false;
       });
       if (response.code == WrapCode.Fail) {
-        // Fluttertoast.showToast(
-        //     msg: response.msg,
-        //     toastLength: Toast.LENGTH_SHORT,
-        //     gravity: ToastGravity.CENTER,
-        //     timeInSecForIos: 1,
-        //     backgroundColor: Colors.red,
-        //     textColor: Colors.white,
-        //     fontSize: 16.0);
-        SnackBar snackbar = SnackBar(
+        final SnackBar snackbar = SnackBar(
           content: Text(response.msg),
-          duration: Duration(seconds: 1),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.redAccent,
         );
-        Scaffold.of(context).showSnackBar(snackbar);
+        //BuildContext 在 Scaffold之前会报错
+        //https://docs.flutter.io/flutter/material/Scaffold/of.html
+        // Scaffold.of(context).showSnackBar(snackbar);
+        _scaffoldState.currentState.showSnackBar(snackbar);
       } else {
         UserStorage.getInstance().saveUser(response.result);
         Navigator.pop(context);
       }
-    }).catchError((error) {});
+    }).catchError((error) {
+      print(error);
+    });
   }
 }

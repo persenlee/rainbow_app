@@ -13,7 +13,7 @@ Feed _$FeedFromJson(Map<String, dynamic> json) {
     ..src = json['src'] as String
     ..thumbSrc = json['thumb_src'] as String
     ..likeCount = json['like_count'] as int
-    ..like = json['like'] as bool
+    ..like = json['favorite'] as bool
     ..tags = (json['tags'] as List)
         ?.map((e) => e == null ? null : Tag.fromJson(e as Map<String, dynamic>))
         ?.toList();

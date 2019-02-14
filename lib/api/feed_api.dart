@@ -17,7 +17,11 @@ class FeedAPI {
           if (tagStr == '') {
             map['tags'] = null;
           } else {
-            map['tags'] = json.decode(tagStr);
+            List tags = List();
+            for (int t in json.decode(tagStr)){
+              tags.add({'id' : t,'name' : ''});
+            }
+            map['tags'] = tags;
           }
           Feed feed = Feed.fromJson(map);
           feedList.add(feed);

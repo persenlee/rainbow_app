@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   int _page = 1;
   List<Feed> feedList = List();
-  User _user;
+  User _user = User();
   FileImage _localAvatar;
 
   @override
@@ -85,8 +85,8 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text(_user.userName),
-              accountEmail: Text(_user.email),
+              accountName: Text(_user.userName == null ? '' : _user.userName),
+              accountEmail: Text(_user.email == null ? '' : _user.email),
               currentAccountPicture: new GestureDetector(
                   onTap: () {
                     _changeAvatar(context);
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                         placeholder: AssetImage('assets/default-avatar.png'),
                         image: _localAvatar != null
                             ? _localAvatar
-                            : NetworkImage(_user.avatar),
+                            : NetworkImage(_user.avatar == null ? '' : _user.avatar),
                       ),
                   )
                   // CircleAvatar(
@@ -295,7 +295,7 @@ class _HomePageState extends State<HomePage> {
                       children: <Widget>[
                         IconButton(
                           icon: Icon(
-                            feed.like ? Icons.favorite : Icons.favorite_border,
+                             feed.like != null && feed.like ? Icons.favorite : Icons.favorite_border,
                             semanticLabel: 'like',
                           ),
                           onPressed: () {
