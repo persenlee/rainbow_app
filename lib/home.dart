@@ -13,16 +13,15 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
-import './api/base_api.dart';
 import './api/feed_api.dart';
 import 'model/feed.dart';
 import 'model/user.dart';
-import 'dart:math' show max;
 import 'dart:io';
 import 'package:Shrine/supplemental/user_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'gallery.dart';
+import 'package:Shrine/supplemental/action.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -303,20 +302,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void like(Feed feed) {
-    UserStorage.getInstance().readUser().then((user) {
-      if (user != null && user.id > 0) {
-        FeedAPI.like(feed.id, !feed.like).then((response) {
-          if (response.code == WrapCode.Ok) {
-            setState(() {
-              feed.like = !feed.like;
-              int count = (feed.like ? feed.likeCount + 1 : feed.likeCount - 1);
-              feed.likeCount = max(count, 0);
+    Action.like(context, feed, (){
+      setState(() {
             });
-          }
-        });
-      } else {
-        Navigator.of(context).pushNamed('/login');
-      }
+    }, (){
+
     });
   }
 }
