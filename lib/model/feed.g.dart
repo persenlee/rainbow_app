@@ -37,3 +37,12 @@ Tag _$TagFromJson(Map<String, dynamic> json) {
 
 Map<String, dynamic> _$TagToJson(Tag instance) =>
     <String, dynamic>{'id': instance.id, 'name': instance.name};
+
+Report _$ReportFromJson(Map<String, dynamic> json) {
+  return Report()
+    ..id = json['id'] as int
+    ..reason = json['reason'] as String;
+}
+
+Map<String, dynamic> _$ReportToJson(Report instance) =>
+    <String, dynamic>{'id': instance.id, 'reason': instance.reason};

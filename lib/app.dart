@@ -16,17 +16,25 @@ import 'package:flutter/material.dart';
 import 'package:Rainbow/page/home.dart';
 import 'package:Rainbow/page/login.dart';
 import 'package:Rainbow/page/register.dart';
+import 'package:Rainbow/supplemental/config_storage.dart';
 
 class ShrineApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    _loadConfig();
     return MaterialApp(
       title: 'Rainbow',
       home: HomePage(),
       onGenerateRoute: _getRoute,
     );
   }
+
+  _loadConfig() async{
+    ConfigStorage storage = await ConfigStorage.getInstance();
+    storage.loadFromNetwork();
+  }
+
   //Navigator.of(context).pushNamed('/login');
   Route<dynamic> _getRoute(RouteSettings settings) {
     WidgetBuilder builder;

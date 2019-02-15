@@ -29,3 +29,12 @@ class Tag {
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
   Map<String, dynamic> toJson() => _$TagToJson(this);
 }
+
+@JsonSerializable()
+class Report{
+  Report();
+  int id;
+  String reason;
+  factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);
+  Map<String, dynamic> toJson() => _$ReportToJson(this);
+}
