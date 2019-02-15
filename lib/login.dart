@@ -52,20 +52,6 @@ class _LoginPageState extends State<LoginPage> {
           ListView(
             padding: EdgeInsets.symmetric(horizontal: 24.0),
             children: <Widget>[
-              new Align(
-                alignment: FractionalOffset.topLeft,
-                child: new Container(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.close,
-                      semanticLabel: 'close',
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              ),
               SizedBox(height: 80.0),
               Column(
                 children: <Widget>[
@@ -74,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
                   Text('Rainbow'),
                 ],
               ),
-              SizedBox(height: 100.0),
+              SizedBox(height: 80.0),
               TextField(
                 focusNode: _userNameFocusNode,
                 decoration: InputDecoration(
@@ -87,13 +73,13 @@ class _LoginPageState extends State<LoginPage> {
                 autofocus: true,
                 enabled: !_loading,
                 onEditingComplete: () {
-                  if(_checkEmail()) {
+                  if (_checkEmail()) {
                     FocusScope.of(context).requestFocus(_passwordFocusNode);
                   }
                 },
               ),
               // spacer
-              SizedBox(height: 24.0),
+              SizedBox(height: 18.0),
               // [Password]
               TextField(
                 focusNode: _passwordFocusNode,
@@ -105,20 +91,23 @@ class _LoginPageState extends State<LoginPage> {
                 enabled: !_loading,
                 controller: _passwordController,
                 onEditingComplete: () {
-                  if(_checkPassword()){
+                  if (_checkPassword()) {
                     // _doLogin();
                   }
                 },
               ),
-              SizedBox(height: 24.0),
-              RaisedButton(
-                key: _loginButtonKey,
-                child: Text('Sign In'),
-                textColor: Colors.white,
-                color: Colors.lightBlue,
-                onPressed: () {
-                  _doLogin();
-                },
+              SizedBox(height: 18.0),
+              Container(
+                height: 46,
+                child: RaisedButton(
+                  key: _loginButtonKey,
+                  child: Text('Sign In'),
+                  textColor: Colors.white,
+                  color: Colors.lightBlue,
+                  onPressed: () {
+                    _doLogin();
+                  },
+                ),
               ),
               SizedBox(height: 24.0),
               GestureDetector(
@@ -139,7 +128,21 @@ class _LoginPageState extends State<LoginPage> {
               child: CircularProgressIndicator(),
               duration: Duration(milliseconds: 100),
             ),
-          )
+          ),
+          new Align(
+                alignment: FractionalOffset.topLeft,
+                child: new Container(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.close,
+                      semanticLabel: 'back',
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+              ),
         ],
       )),
     );
@@ -148,9 +151,9 @@ class _LoginPageState extends State<LoginPage> {
   bool _checkEmail() {
     if (Validator.isEmail(_email)) {
       setState(() {
-        _emailErrorText = ''; 
+        _emailErrorText = '';
       });
-      
+
       return true;
     } else {
       setState(() {
@@ -161,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  bool _checkPassword(){
+  bool _checkPassword() {
     if (_password.length < 6) {
       setState(() {
         _passwordErrorText = 'inscure password length (length > 6)';
@@ -180,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
   _doLogin() {
     if (!_checkEmail()) return;
 
-    if(!_checkPassword()) return;
+    if (!_checkPassword()) return;
 
     //dismiss keyboard
     FocusScope.of(context).requestFocus(new FocusNode());

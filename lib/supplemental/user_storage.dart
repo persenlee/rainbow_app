@@ -26,7 +26,7 @@ class UserStorage {
       user.avatar = prefs.getString('avatar');
       user.age = prefs.getInt('age');
       user.gender = prefs.getInt('gender');
-      user.userName = prefs.getString('userName');
+      user.name = prefs.getString('userName');
     } else {
       user.id = 0;
     }
@@ -36,7 +36,7 @@ class UserStorage {
   saveUser(User user) async{
     storage.write(key: 'user' ,value: user.id.toString());
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userName', user.userName);
+    prefs.setString('userName', user.name);
     prefs.setString('avatar',user.avatar);
     prefs.setInt('age', user.age);
     prefs.setInt('gender', user.gender);

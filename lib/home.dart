@@ -85,7 +85,7 @@ class _HomePageState extends State<HomePage> {
           child: ListView(
           children: <Widget>[
             UserAccountsDrawerHeader(
-              accountName: Text(_user.userName == null ? '' : _user.userName),
+              accountName: Text(_user.name == null ? '' : _user.name),
               accountEmail: Text(_user.email == null ? '' : _user.email),
               currentAccountPicture: new GestureDetector(
                   onTap: () {
@@ -128,6 +128,19 @@ class _HomePageState extends State<HomePage> {
               title: Text('About',style: TextStyle(fontSize: 16,color: Colors.black87),),
               leading: Icon(Icons.info, color: Colors.redAccent),
             ),
+            SizedBox(height: 46,),
+            Container(
+              width: 46,
+              height: 32,
+              child: RaisedButton(
+                color: Colors.redAccent,
+                textColor: Colors.white,
+                child: Text('Login'),
+                onPressed: (){
+                  Navigator.of(context).pushNamed('/login');
+                },
+              ),
+            )
           ],
         ),
         ) 

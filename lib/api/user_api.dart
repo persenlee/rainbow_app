@@ -52,8 +52,8 @@ class LoginAPI {
     const url = '/user/profile';
     try {
       Map params = {'id' : user.id};
-      if(user.userName != null)
-        params['name'] = user.userName;
+      if(user.name != null)
+        params['name'] = user.name;
       if(user.avatar != null)
         params['avatar'] = user.avatar;
       if(user.age != null)

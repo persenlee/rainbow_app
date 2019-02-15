@@ -9,11 +9,11 @@ part of 'feed.dart';
 Feed _$FeedFromJson(Map<String, dynamic> json) {
   return Feed()
     ..id = json['id'] as int
-    ..title = json['title'] as String
-    ..src = json['src'] as String
-    ..thumbSrc = json['thumb_src'] as String
-    ..likeCount = json['like_count'] as int
-    ..like = json['favorite'] as bool
+    ..title = json['title'] as String ?? ''
+    ..src = json['src'] as String ?? ''
+    ..thumbSrc = json['thumb_src'] as String ?? ''
+    ..likeCount = json['like_count'] as int ?? 0
+    ..like = json['favorite'] as bool ?? false
     ..tags = (json['tags'] as List)
         ?.map((e) => e == null ? null : Tag.fromJson(e as Map<String, dynamic>))
         ?.toList();
@@ -23,9 +23,9 @@ Map<String, dynamic> _$FeedToJson(Feed instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'src': instance.src,
-      'thumbSrc': instance.thumbSrc,
-      'likeCount': instance.likeCount,
-      'like': instance.like,
+      'thumb_src': instance.thumbSrc,
+      'like_count': instance.likeCount,
+      'favorite': instance.like,
       'tags': instance.tags
     };
 
