@@ -1,41 +1,31 @@
-// Copyright 2018-present the Flutter authors. All Rights Reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 import 'package:flutter/material.dart';
-import './api/user_api.dart';
-import './api/base_api.dart';
-import 'package:Shrine/supplemental/validate.dart';
-import 'package:Shrine/supplemental/user_storage.dart';
+import 'package:Rainbow/api/user_api.dart';
+import 'package:Rainbow/api/base_api.dart';
+import 'package:Rainbow/supplemental/validate.dart';
+import 'package:Rainbow/supplemental/user_storage.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
   final FocusNode _userNameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
-  final _loginButtonKey = GlobalKey();
+  final FocusNode _confirmFocusNode = FocusNode();
+  final _registerButtonKey = GlobalKey();
   final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey();
   String _email;
   String _password;
+  String _confirm;
   String _emailErrorText = '';
   String _passwordErrorText = '';
-  bool _loading = false;
+  String _confirmErrorText = '';
 
+  bool _loading = false;
   @override
   Widget build(BuildContext context) {
     _usernameController.addListener(() {
@@ -44,13 +34,16 @@ class _LoginPageState extends State<LoginPage> {
     _passwordController.addListener(() {
       _password = _passwordController.text;
     });
-    return Scaffold(
+    _confirmController.addListener(() {
+      _confirm = _confirmController.text;
+    });
+    return new Scaffold(
       key: _scaffoldState,
       body: SafeArea(
           child: Stack(
         children: <Widget>[
           ListView(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
+            padding: EdgeInsets.symmetric(horizontal: 24),
             children: <Widget>[
               SizedBox(height: 80.0),
               Column(
@@ -60,65 +53,73 @@ class _LoginPageState extends State<LoginPage> {
                   Text('Rainbow'),
                 ],
               ),
-              SizedBox(height: 80.0),
+              SizedBox(height: 90.0),
               TextField(
+                controller: _usernameController,
                 focusNode: _userNameFocusNode,
                 decoration: InputDecoration(
-                    filled: true,
                     hintText: 'Email',
-                    errorText: _emailErrorText),
+                    errorText: _emailErrorText,
+                    filled: true,
+                    labelStyle: TextStyle(
+                      fontSize: 15,
+                    )),
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
-                controller: _usernameController,
-                autofocus: true,
-                enabled: !_loading,
                 onEditingComplete: () {
                   if (_checkEmail()) {
                     FocusScope.of(context).requestFocus(_passwordFocusNode);
                   }
                 },
               ),
-              // spacer
-              SizedBox(height: 18.0),
-              // [Password]
+              SizedBox(height: 18),
               TextField(
-                focusNode: _passwordFocusNode,
-                decoration: InputDecoration(
-                    filled: true,
-                    hintText: 'Password',
-                    errorText: _passwordErrorText),
-                obscureText: true,
-                enabled: !_loading,
                 controller: _passwordController,
-                onEditingComplete: () {
+                focusNode: _passwordFocusNode,
+                obscureText: true,
+                decoration: InputDecoration(
+                    hintText: 'Password',
+                    errorText: _passwordErrorText,
+                    filled: true,
+                    labelStyle: TextStyle(
+                      fontSize: 15,
+                    )),
+                textInputAction: TextInputAction.next,
+                onEditingComplete: (){
                   if (_checkPassword()) {
-                    // _doLogin();
+                    FocusScope.of(context).requestFocus(_confirmFocusNode);
                   }
                 },
               ),
-              SizedBox(height: 18.0),
+              SizedBox(height: 18),
+              TextField(
+                controller: _confirmController,
+                focusNode: _confirmFocusNode,
+                obscureText: true,
+                decoration: InputDecoration(
+                    hintText: 'Confirm Password',
+                    errorText: _confirmErrorText,
+                    filled: true,
+                    labelStyle: TextStyle(
+                      fontSize: 15,
+                    )),
+                onEditingComplete: () {
+                  _checkConfirmPassword();
+                },
+              ),
+              SizedBox(height: 18),
               Container(
                 height: 46,
                 child: RaisedButton(
-                  key: _loginButtonKey,
-                  child: Text('Sign In'),
+                  key: _registerButtonKey,
+                  child: Text('Sign Up'),
                   textColor: Colors.white,
-                  color: Colors.lightBlue,
+                  color: Colors.lightBlueAccent,
                   onPressed: () {
-                    _doLogin();
+                    _doRegister();
                   },
                 ),
-              ),
-              SizedBox(height: 24.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/register');
-                },
-                child: Text('No Account Yet？Click to Sign Up',
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue)),
-              ),
+              )
             ],
           ),
           Align(
@@ -169,8 +170,7 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _passwordErrorText = 'inscure password length (length > 6)';
       });
-      // FocusScope.of(context).requestFocus(_passwordFocusNode);
-      Scrollable.ensureVisible(_loginButtonKey.currentContext);
+      FocusScope.of(context).requestFocus(_passwordFocusNode);
       return false;
     } else {
       setState(() {
@@ -180,10 +180,28 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  _doLogin() {
+  bool _checkConfirmPassword() {
+    if (_confirm != _password) {
+      setState(() {
+        _confirmErrorText = 'confirm password error';
+      });
+      // FocusScope.of(context).requestFocus(_passwordFocusNode);
+      Scrollable.ensureVisible(_registerButtonKey.currentContext);
+      return false;
+    } else {
+      setState(() {
+        _confirmErrorText = '';
+      });
+      return true;
+    }
+  }
+
+  _doRegister() {
     if (!_checkEmail()) return;
 
     if (!_checkPassword()) return;
+
+    if (!_checkConfirmPassword()) return;
 
     //dismiss keyboard
     FocusScope.of(context).requestFocus(new FocusNode());
@@ -191,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _loading = true;
     });
-    LoginAPI.login(_email, _password).then((response) {
+    LoginAPI.register(_email, _password).then((response) {
       setState(() {
         _loading = false;
       });
@@ -206,8 +224,9 @@ class _LoginPageState extends State<LoginPage> {
         // Scaffold.of(context).showSnackBar(snackbar);
         _scaffoldState.currentState.showSnackBar(snackbar);
       } else {
-        UserStorage.getInstance().saveUser(response.result);
-        Navigator.pop(context);
+        // UserStorage.getInstance().saveUser(response.result);
+        // UserStorage.getInstance().saveLastEmail(_email);
+        Navigator.pop(context,_email);
       }
     }).catchError((error) {
       print(error);

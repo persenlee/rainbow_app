@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
-import 'model/feed.dart';
+import 'package:Rainbow/model/feed.dart';
 import 'dart:math';
-import 'package:Shrine/supplemental/action.dart';
+import 'package:Rainbow/supplemental/action.dart';
 
 class GalleryPage extends StatefulWidget {
   final List<Feed> feedList;
@@ -11,21 +11,19 @@ class GalleryPage extends StatefulWidget {
   const GalleryPage({Key key, this.feedList, this.index}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return _GalleryPageState(feedList, index);
+    return _GalleryPageState();
   }
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  List<Feed> feedList = List();
-  int index;
   Feed currentFeed;
   PageController _pageController = PageController();
-  _GalleryPageState(feedList, index) {
-    this.feedList = feedList;
-    this.index = index;
+  @override
+  void initState() {
     _pageController = PageController(
-      initialPage: min(max(index, 0), feedList.length),
+      initialPage: min(max(widget.index, 0), widget.feedList.length),
     );
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {
@@ -40,8 +38,7 @@ class _GalleryPageState extends State<GalleryPage> {
             transitionOnUserGestures: true,
             onPageChanged: (page) {
               setState(() {
-                this.index = index;
-                this.currentFeed = feedList[index];
+                this.currentFeed = widget.feedList[page];
               });
             },
           ),
@@ -75,7 +72,7 @@ class _GalleryPageState extends State<GalleryPage> {
 
   List<PhotoViewGalleryPageOptions> _buidGalleryPageOptions(
       BuildContext context) {
-    return feedList.map((feed) {
+    return widget.feedList.map((feed) {
       return PhotoViewGalleryPageOptions(
           imageProvider: NetworkImage(feed.src),
           heroTag: feed.id.toString(),

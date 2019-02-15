@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:Shrine/api/base_api.dart';
-import 'package:Shrine/api/feed_api.dart';
-import 'package:Shrine/model/feed.dart';
+import 'package:Rainbow/api/base_api.dart';
+import 'package:Rainbow/api/feed_api.dart';
+import 'package:Rainbow/model/feed.dart';
 import 'user_storage.dart';
 import 'dart:math';
 

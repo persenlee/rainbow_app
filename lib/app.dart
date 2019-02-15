@@ -13,17 +13,16 @@
 // limitations under the License.
 
 import 'package:flutter/material.dart';
-
-import 'home.dart';
-import 'login.dart';
-import 'register.dart';
+import 'package:Rainbow/page/home.dart';
+import 'package:Rainbow/page/login.dart';
+import 'package:Rainbow/page/register.dart';
 
 class ShrineApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Shrine',
+      title: 'Rainbow',
       home: HomePage(),
       onGenerateRoute: _getRoute,
     );

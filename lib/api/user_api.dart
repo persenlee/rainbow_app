@@ -1,7 +1,7 @@
 import 'dart:convert';
 import '../model/feed.dart';
 import './base_api.dart';
-import 'package:Shrine/model/user.dart';
+import 'package:Rainbow/model/user.dart';
 
 class LoginAPI {
   static login(String email, String password) async {

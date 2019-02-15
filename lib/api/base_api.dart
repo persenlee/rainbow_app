@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:Shrine/supplemental/user_storage.dart';
-import 'package:Shrine/model/user.dart';
+import 'package:Rainbow/supplemental/user_storage.dart';
+import 'package:Rainbow/model/user.dart';
 
 enum WrapCode {
   Ok,
@@ -25,7 +25,7 @@ enum HttpMethod {
 class BaseAPI {
   static requestUrl(String url, HttpMethod method, Map params) async {
     var httpClient = new Dio();
-    httpClient.options.baseUrl = /*'http://192.168.0.200:8000';*/'http://192.168.3.5:8000';
+    httpClient.options.baseUrl = 'http://192.168.0.200:8000'; /*'http://192.168.3.5:8000';*/
     httpClient.options.contentType = ContentType.parse("application/x-www-form-urlencoded");
     httpClient.options.connectTimeout = 3000; //5s
     httpClient.options.receiveTimeout = 3000;

@@ -1,5 +1,5 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:Shrine/model/user.dart';
+import 'package:Rainbow/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserStorage {
@@ -27,6 +27,7 @@ class UserStorage {
       user.age = prefs.getInt('age');
       user.gender = prefs.getInt('gender');
       user.name = prefs.getString('userName');
+      user.email = prefs.getString('email');
     } else {
       user.id = 0;
     }
@@ -40,5 +41,27 @@ class UserStorage {
     prefs.setString('avatar',user.avatar);
     prefs.setInt('age', user.age);
     prefs.setInt('gender', user.gender);
+    prefs.setString('email', user.email);
+  }
+
+  deleteUser(int userId) async {
+    storage.delete(key: 'user');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userName', null);
+    prefs.setString('avatar',null);
+    prefs.setInt('age', null);
+    prefs.setInt('gender', null);
+    prefs.setString('email', null);
+  }
+
+  saveLastEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('last_email', user.email);
+  }
+
+  readLastEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('last_email');
+    return email;
   }
 }
