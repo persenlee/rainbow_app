@@ -1,7 +1,6 @@
 import 'base_api.dart';
-import 'package:Rainbow/model/feed.dart';
 
-class SystemAPI{
+class SystemAPI extends BaseAPI{
   static config() async {
     const url = '/system/config';
     try {

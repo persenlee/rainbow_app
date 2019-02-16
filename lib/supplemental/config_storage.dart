@@ -33,21 +33,21 @@ class ConfigStorage{
   reload() {
     if(_config != null){
       Map map = json.decode(_config);
-      List<Map> tagsList = map['tags'];
-      List<Map> reportsList = map['reports'];
+      List<Map<String,dynamic>> tagsList =  List<Map<String,dynamic>>.from(map['tags']) ;
+      List<Map<String,dynamic>> reportsList = List<Map<String,dynamic>>.from(map['reports']);
       _tags = tagsList.map((map){
         return Tag.fromJson(map);
-      });
+      }).toList();
       _reports = reportsList.map((map){
         return Report.fromJson(map);
-      });
+      }).toList();
     }
   }
 
   loadFromNetwork() {
     SystemAPI.config().then((response){
-      if (response.code == WrapCode.Ok && response.data != null) {
-        saveConfig(response.data);
+      if (response.code == WrapCode.Ok && response.result != null) {
+        saveConfig(response.result);
       }
     });
   }

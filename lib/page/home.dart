@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
 
 //login or logout
   _buidLoginButton(BuildContext context) {
-    return _user.id > 0
+    return _user != null && _user.id != null && _user.id > 0
         ? RaisedButton(
             color: Colors.red[200],
             textColor: Colors.white,

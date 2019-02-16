@@ -2,7 +2,7 @@ import 'dart:convert';
 import '../model/feed.dart';
 import './base_api.dart';
 
-class FeedAPI {
+class FeedAPI extends BaseAPI{
   static getFeeds(int page, int perPage) async {
     const url = '/feed/feeds';
     try {

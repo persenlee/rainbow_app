@@ -44,7 +44,7 @@ class UserStorage {
     prefs.setString('email', user.email);
   }
 
-  deleteUser(int userId) async {
+  deleteUser() async {
     storage.delete(key: 'user');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userName', null);

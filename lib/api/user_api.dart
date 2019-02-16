@@ -3,7 +3,7 @@ import '../model/feed.dart';
 import './base_api.dart';
 import 'package:Rainbow/model/user.dart';
 
-class LoginAPI {
+class LoginAPI extends BaseAPI{
   static login(String email, String password) async {
     const url = '/user/login';
     try {
