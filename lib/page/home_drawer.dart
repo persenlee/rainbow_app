@@ -92,15 +92,8 @@ class _HomePageDrawerState extends State<HomeDrawerPage> {
                     _tapSetting(context);
                   },
                 ),
-                ListTile(
-                  title: Text(
-                    'About',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  leading: Icon(Icons.info, color: Colors.white),
-                ),
                 SizedBox(
-                  height: 46,
+                  height: 64,
                 ),
                 Container(
                   width: 46,
@@ -169,6 +162,6 @@ class _HomePageDrawerState extends State<HomeDrawerPage> {
   }
 
   _tapSetting(BuildContext context){
-
+    Navigator.of(context).pushNamed('/setting');
   }
 }

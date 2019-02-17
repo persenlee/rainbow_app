@@ -18,6 +18,7 @@ import 'package:Rainbow/page/login.dart';
 import 'package:Rainbow/page/register.dart';
 import 'package:Rainbow/supplemental/config_storage.dart';
 import 'package:Rainbow/page/profile.dart';
+import 'package:Rainbow/page/setting.dart';
 
 class ShrineApp extends StatelessWidget {
   @override
@@ -47,6 +48,9 @@ class ShrineApp extends StatelessWidget {
         break;
       case '/profile':
         builder = (BuildContext context) => ProfilePage();
+        break;
+      case '/setting':
+        builder = (BuildContext context) => SettingPage();
         break;
       default:
     }
