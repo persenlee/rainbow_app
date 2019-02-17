@@ -16,10 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:Rainbow/api/feed_api.dart';
 import 'package:Rainbow/model/feed.dart';
 import 'package:Rainbow/model/user.dart';
-import 'dart:io';
 import 'package:Rainbow/supplemental/user_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'gallery.dart';
 import 'package:Rainbow/supplemental/action.dart';
 import 'package:Rainbow/view/card.dart';
@@ -34,8 +31,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   int _page = 1;
   List<Feed> feedList = List();
-  User _user = User();
-  FileImage _localAvatar;
+  User _user;
 
   @override
   void initState() {
@@ -89,29 +85,26 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 24,
                 ),
-                UserAccountsDrawerHeader(
+                UserAccountsDrawerHeader(  
                   accountName: Text(
-                    _user.name == null ? 'acd' : _user.name,
+                    _user == null ? '----' : _user.name,
                     style: TextStyle(fontSize: 18),
                   ),
                   accountEmail: Text(
-                    _user.email == null ? 'a@b.com' : _user.email,
+                    _user == null ? '----' : _user.email,
                     style: TextStyle(fontSize: 16),
                   ),
                   currentAccountPicture: new GestureDetector(
                       onTap: () {
-                        _changeAvatar(context);
+                        
                       },
                       child: ClipOval(
                         child: FadeInImage(
-                          width: 100,
-                          height: 100,
-                          fit: BoxFit.fitWidth,
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.scaleDown,
                           placeholder: AssetImage('assets/default-avatar.png'),
-                          image: _localAvatar != null
-                              ? _localAvatar
-                              : NetworkImage(
-                                  _user.avatar == null ? '' : _user.avatar),
+                          image: NetworkImage(_user == null ? '' : _user.avatar) ,
                         ),
                       )),
                   decoration: BoxDecoration(color: backgroundColor),
@@ -125,6 +118,18 @@ class _HomePageState extends State<HomePage> {
                     Icons.verified_user,
                     color: Colors.white,
                   ),
+                  onTap: (){
+                    UserStorage.getInstance().readUser().then((user) {
+                      if (user != null && user.id > 0) {
+                      Navigator.of(context).pushNamed('/profile').then((value){
+                        setState(() {
+                        });
+                      });
+                      } else {
+                        Navigator.of(context).pushNamed('/login');
+                      }
+                    });
+                  },
                 ),
                 ListTile(
                   title: Text(
@@ -176,7 +181,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {
               UserStorage.getInstance().deleteUser().then(() {
                 setState(() {
-                  _user = User();
+                  _user = null;
                 });
               });
             },
@@ -191,55 +196,7 @@ class _HomePageState extends State<HomePage> {
           );
   }
 
-  _changeAvatar(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext context) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.photo_album),
-                title: Text('album'),
-                onTap: () {
-                  _pickImage(ImageSource.gallery);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.photo_camera),
-                title: Text('camera'),
-                onTap: () {
-                  _pickImage(ImageSource.camera);
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          );
-        });
-  }
-
-  _pickImage(ImageSource source) {
-    ImagePicker.pickImage(source: source).then((imageFile) {
-      _cropImage(imageFile);
-    });
-  }
-
-  _cropImage(File imageFile) {
-    ImageCropper.cropImage(
-            sourcePath: imageFile.path,
-            ratioX: 1.0,
-            ratioY: 1.0,
-            maxWidth: 256,
-            maxHeight: 256,
-            circleShape: true)
-        .then((croppedImageFile) {
-      setState(() {
-        _localAvatar = FileImage(croppedImageFile);
-      });
-    });
-  }
+  
 
   _scrollListener() {
     if (_scrollController.position.pixels ==

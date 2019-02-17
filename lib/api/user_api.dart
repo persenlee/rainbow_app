@@ -3,7 +3,7 @@ import '../model/feed.dart';
 import './base_api.dart';
 import 'package:Rainbow/model/user.dart';
 
-class LoginAPI extends BaseAPI{
+class UserAPI extends BaseAPI{
   static login(String email, String password) async {
     const url = '/user/login';
     try {
@@ -49,9 +49,12 @@ class LoginAPI extends BaseAPI{
   }
 
   static editProfile(User user) async {
+    if (user ==null) {
+      return null;
+    }
     const url = '/user/profile';
     try {
-      Map params = {'id' : user.id};
+      Map params = {};
       if(user.name != null)
         params['name'] = user.name;
       if(user.avatar != null)

@@ -6,7 +6,7 @@ class UserStorage {
   // static final UserStorage instance = new UserStorage._internal();
   static final UserStorage instance = new UserStorage();
   final storage = new FlutterSecureStorage();
-  final User user = null;
+  User user;
   // factory UserStorage() {
   //   return instance;
   // }
@@ -18,9 +18,10 @@ class UserStorage {
   }
 
   readUser() async {
+    if (user != null) return user;
     String value = await storage.read(key: 'user');
-    User user = User();
     if (value != null) {
+      user = User();
       user.id = int.parse(value);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       user.avatar = prefs.getString('avatar');
@@ -28,30 +29,30 @@ class UserStorage {
       user.gender = prefs.getInt('gender');
       user.name = prefs.getString('userName');
       user.email = prefs.getString('email');
-    } else {
-      user.id = 0;
     }
     return user;
   }
 
-  saveUser(User user) async{
-    storage.write(key: 'user' ,value: user.id.toString());
+  saveUser(User user) async {
+    storage.write(key: 'user', value: user.id.toString());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userName', user.name);
-    prefs.setString('avatar',user.avatar);
+    prefs.setString('avatar', user.avatar);
     prefs.setInt('age', user.age);
     prefs.setInt('gender', user.gender);
     prefs.setString('email', user.email);
+    this.user = user;
   }
 
   deleteUser() async {
-    storage.delete(key: 'user');
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('userName', null);
-    prefs.setString('avatar',null);
-    prefs.setInt('age', null);
-    prefs.setInt('gender', null);
-    prefs.setString('email', null);
+      storage.delete(key: 'user');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userName', null);
+      prefs.setString('avatar', null);
+      prefs.setInt('age', null);
+      prefs.setInt('gender', null);
+      prefs.setString('email', null);
+      user = null;
   }
 
   saveLastEmail(String email) async {

@@ -209,7 +209,7 @@ class _RegisterPageState extends State<RegisterPage> {
     setState(() {
       _loading = true;
     });
-    LoginAPI.register(_email, _password).then((response) {
+    UserAPI.register(_email, _password).then((response) {
       setState(() {
         _loading = false;
       });

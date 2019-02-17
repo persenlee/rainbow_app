@@ -206,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _loading = true;
     });
-    LoginAPI.login(_email, _password).then((response) {
+    UserAPI.login(_email, _password).then((response) {
       setState(() {
         _loading = false;
       });

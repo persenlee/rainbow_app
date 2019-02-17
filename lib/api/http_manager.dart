@@ -43,9 +43,9 @@ class HttpManager {
       bool foundSession = false;
       bool expried = false;
       for (Cookie cookie in cookies) {
-        if (cookie.name == 'SessioId') {
+        if (cookie.name == 'sessionid') {
           foundSession = true;
-          if (cookie.expires.compareTo(DateTime.now()) > 0) {
+          if (cookie.expires.compareTo(DateTime.now()) <= 0) {
             cookies.remove(cookie);
             expried = true;
           }
