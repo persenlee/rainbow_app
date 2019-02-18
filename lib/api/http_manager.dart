@@ -28,6 +28,10 @@ class HttpManager {
     return _instance;
   }
 
+  resetBaseUrl(String baseUrl){
+    httpClient.options.baseUrl =baseUrl;
+  }
+
   _addCookieManager() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;

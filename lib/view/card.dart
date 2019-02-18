@@ -28,7 +28,9 @@ class _FeedCardState extends State<FeedCard> {
   Widget build(BuildContext context) {
   
    final ThemeData theme = Theme.of(context);
-    return Card(
+    return SizeTransition(
+      sizeFactor: widget.animation,
+      child: Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,6 +89,6 @@ class _FeedCardState extends State<FeedCard> {
             ),
           ],
         ),
-      );
+      ));
   }
 }
