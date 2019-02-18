@@ -26,11 +26,17 @@ class _FeedCardState extends State<FeedCard> {
   }
   @override
   Widget build(BuildContext context) {
-  
-   final ThemeData theme = Theme.of(context);
-    return SizeTransition(
-      sizeFactor: widget.animation,
-      child: Card(
+    return widget.animation !=null ? 
+      SizeTransition(
+        sizeFactor: widget.animation,
+        child: _getCard(context)
+      ) 
+      :
+      _getCard(context);
+  }
+  _getCard(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,10 +54,13 @@ class _FeedCardState extends State<FeedCard> {
                 },
               ),
             ),
+            //Expanded can not set in listview
             Expanded(
               child: Padding(
                 padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
-                child: Column(
+                child: 
+                Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -89,6 +98,6 @@ class _FeedCardState extends State<FeedCard> {
             ),
           ],
         ),
-      ));
+      );
   }
 }

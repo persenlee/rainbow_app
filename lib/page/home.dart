@@ -19,7 +19,9 @@ import 'gallery.dart';
 import 'package:Rainbow/supplemental/action.dart';
 import 'package:Rainbow/view/card.dart';
 import 'home_drawer.dart';
-
+import 'package:Rainbow/supplemental/util.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:Rainbow/api/http_manager.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -42,6 +44,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    _baseUrlChange(context);
     return Scaffold(
         appBar: AppBar(
           title: Text('Rainbow'),
@@ -152,5 +155,54 @@ class _HomePageState extends State<HomePage> {
     Action.like(context, feed, () {
       setState(() {});
     }, () {});
+  }
+
+  CupertinoActionSheet _sheet;
+
+  getSheet(BuildContext context){
+    if (_sheet ==null) {
+      _sheet = CupertinoActionSheet(
+            title: Text('API http domain switch'),
+            message: Text('switch api domain only for develop using'),
+            cancelButton: CupertinoActionSheetAction(
+              child: Text('Cancel'),
+              onPressed: (){
+                Navigator.pop(context);
+              },
+            ),
+            actions: 
+          <Widget>[
+            CupertinoActionSheetAction(
+              child: Text('Company [http://192.168.0.200:8000]'),
+              onPressed: (){
+                Navigator.pop(context);
+              }),
+            CupertinoActionSheetAction(
+              child: Text('Home [http://192.168.3.5:8000]'),
+              onPressed: (){
+                Navigator.pop(context);
+              }),
+          ]);
+    }
+    return _sheet;
+  }
+
+  _baseUrlChange(BuildContext context) {
+    if (Util.buildMode() ==BuildMode.debug) {
+      Util.listenMotionShake((result){
+        if (result && _sheet ==null) {
+          showCupertinoModalPopup(
+            context: context,
+            builder:(BuildContext context) => getSheet(context)
+          ).then((value){
+            HttpManager.sharedInstance().then((manager){
+              manager.resetBaseUrl(value);
+            });
+            _sheet =null;
+          });
+          
+        }
+      });
+    }
   }
 }

@@ -97,6 +97,9 @@ class UserAPI extends BaseAPI{
       ,'per_page':perPage.toString()};
       var response = await BaseAPI.requestUrl(url, HttpMethod.Get, params);
       if (response.code == WrapCode.Ok) {
+        if (response.response.data == '') {
+          return response;
+        }
         List list = response.response.data;
         List<Feed> feedList = new List();
         for (var map in list) {
@@ -104,7 +107,11 @@ class UserAPI extends BaseAPI{
           if (tagStr == '') {
             map['tags'] = null;
           } else {
-            map['tags'] = json.decode(tagStr);
+            List tags = List();
+            for (int t in json.decode(tagStr)){
+              tags.add({'id' : t,'name' : ''});
+            }
+            map['tags'] = tags;
           }
           Feed feed = Feed.fromJson(map);
           feedList.add(feed);

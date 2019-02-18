@@ -158,7 +158,15 @@ class _HomePageDrawerState extends State<HomeDrawerPage> {
   }
 
   _tapFavorite(BuildContext context){
-    
+    UserStorage.getInstance().readUser().then((user) {
+      if (user != null && user.id > 0) {
+      Navigator.of(context).pushNamed('/favorite').then((value){
+        _refreshUser();
+      });
+      } else {
+        Navigator.of(context).pushNamed('/login');
+      }
+    });
   }
 
   _tapSetting(BuildContext context){

@@ -20,15 +20,11 @@ import 'package:Rainbow/supplemental/config_storage.dart';
 import 'package:Rainbow/page/profile.dart';
 import 'package:Rainbow/page/setting.dart';
 import 'package:Rainbow/page/favorite.dart';
-import 'package:Rainbow/supplemental/util.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:Rainbow/api/http_manager.dart';
 
 class ShrineApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _loadConfig();
-    _baseUrlChange(context);
     return MaterialApp(
       title: 'Rainbow',
       home: HomePage(),
@@ -39,45 +35,6 @@ class ShrineApp extends StatelessWidget {
   _loadConfig() async{
     ConfigStorage storage = await ConfigStorage.getInstance();
     storage.loadFromNetwork();
-  }
-
-  _baseUrlChange(BuildContext context) {
-    if (Util.buildMode() ==BuildMode.debug) {
-      
-      Util.listenMotionShake((result){
-        if (result) {
-          CupertinoActionSheet sheet = CupertinoActionSheet(
-            title: Text('API http domain switch'),
-            message: Text(''),
-            cancelButton: CupertinoActionSheetAction(
-              child: Text('Cancel'),
-              onPressed: (){
-                Navigator.pop(context);
-              },
-            ),
-            actions: 
-          <Widget>[
-            CupertinoActionSheetAction(
-              child: Text('Company [http://192.168.0.200:8000]'),
-              onPressed: (){
-
-              }),
-            CupertinoActionSheetAction(
-              child: Text('Home [http://192.168.0.200:8000]'),
-              onPressed: (){
-
-              }),
-          ]);
-          showCupertinoModalPopup(
-            context: context,
-            builder:(BuildContext context) => sheet
-          ).then((value){
-            HttpManager.sharedInstance().resetBaseUrl(value);
-          });
-          
-        }
-      });
-    }
   }
 
   //Navigator.of(context).pushNamed('/login');

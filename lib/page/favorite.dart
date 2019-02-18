@@ -22,15 +22,16 @@ class _FavoritePageState extends State<FavoritePage> {
 
   @override
   void initState() {
+    super.initState();
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
     feedList = AnimatableList<Feed>(
       listKey: _listKey,
       removedItemBuilder: _buildRemovedItem,
     );
-    super.initState();
+    _fetchData();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,10 +77,10 @@ class _FavoritePageState extends State<FavoritePage> {
     });
   }
 
-  Widget _buildRemovedItem(
-      int pos, BuildContext context, Animation<double> animation) {
+  Widget _buildRemovedItem(int pos, BuildContext context, Animation<double> animation) {
     return FeedCard(
       feed: feedList[pos],
+      animation: animation,
     );
   }
 
@@ -102,10 +103,10 @@ class _FavoritePageState extends State<FavoritePage> {
     if (feedList == null || feedList.length == 0) {
       return SizedBox();
     } else {
-      Padding(
+      return Padding(
         padding: const EdgeInsets.all(16.0),
         child: AnimatedList(
-          initialItemCount: 0,
+          initialItemCount: feedList.length,
           controller: _scrollController,
           key: _listKey,
           itemBuilder: _buildItem,

@@ -28,7 +28,7 @@ class Util {
     if (const bool.fromEnvironment('dart.vm.product')) {
       return BuildMode.release;
     } else {
-      return BuildMode.release;
+      return BuildMode.debug;
     }
   }
 
@@ -40,23 +40,21 @@ class Util {
 
 
 class MotionShakeDetector {
-  static final int SHAKE_THRESHOLD = 800;
-  double lastX, lastY, lastZ;
+  static final int SHAKE_THRESHOLD = 1500;
+  double lastX = 0, lastY = 0, lastZ = 0;
   int lastUpdate = 0;
   detectShake(MotionShakeDetectCallback callback) {
     accelerometerEvents.listen((AccelerometerEvent event) {
-      int curTime = DateTime.now().millisecond;
+      int curTime = DateTime.now().millisecondsSinceEpoch;
       // only allow one update every 100ms.
       if ((curTime - lastUpdate) > 100) {
         int diffTime = (curTime - lastUpdate);
         lastUpdate = curTime;
-
         double x = event.x;
         double y = event.y;
         double z = event.x;
 
-        double speed =
-            (x + y + z - lastX - lastY - lastZ).abs() / diffTime * 10000;
+        double speed = (x + y + z - lastX - lastY - lastZ).abs() / diffTime * 10000;
 
         if (speed > SHAKE_THRESHOLD) {
           callback(true);
@@ -65,6 +63,7 @@ class MotionShakeDetector {
         lastY = y;
         lastZ = z;
       }
+      
     });
   }
 }
