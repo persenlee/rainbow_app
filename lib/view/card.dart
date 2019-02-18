@@ -8,8 +8,9 @@ class FeedCard extends StatefulWidget {
   final Feed feed;
   final FeedCardLikeCallBack likeCallBack;
   final FeedCardImageTapCallBack imageTapCallBack;
+  final Animation<double> animation;
 
-  const FeedCard({Key key,this.feed,this.imageTapCallBack,this.likeCallBack}): super(key:key);
+  const FeedCard({Key key,this.feed,this.animation,this.imageTapCallBack,this.likeCallBack}): super(key:key);
   @override
   State<StatefulWidget> createState() {
     return _FeedCardState();
