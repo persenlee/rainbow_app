@@ -77,16 +77,18 @@ class _FavoritePageState extends State<FavoritePage> {
     });
   }
 
-  Widget _buildRemovedItem(int pos, BuildContext context, Animation<double> animation) {
+  Widget _buildRemovedItem(Feed item, BuildContext context, Animation<double> animation) {
     return FeedCard(
-      feed: feedList[pos],
+      feed: item,
       animation: animation,
     );
   }
 
   Widget _buildItem(
       BuildContext context, int index, Animation<double> animation) {
-    return FeedCard(
+    return Padding(
+      padding: EdgeInsets.only(top: 16),
+      child: FeedCard(
         feed: feedList[index],
         animation: animation,
         imageTapCallBack: () {
@@ -96,21 +98,20 @@ class _FavoritePageState extends State<FavoritePage> {
         },
         likeCallBack: (feed) {
           like(feed);
-        });
+        }),
+    );
   }
 
   _buildFeeds(BuildContext context) {
     if (feedList == null || feedList.length == 0) {
       return SizedBox();
     } else {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: AnimatedList(
+      return  AnimatedList(
           initialItemCount: feedList.length,
           controller: _scrollController,
           key: _listKey,
           itemBuilder: _buildItem,
-        ),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       );
     }
   }

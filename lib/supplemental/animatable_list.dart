@@ -29,11 +29,14 @@ class AnimatableList<E> {
   }
 
   bool remove(E item){
-    if (item !=null) {
-      return _items.remove(item);
-    } else {
+    if (item == null) {
       return false;
     }
+    int index = _items.indexOf(item);
+    if (index >= 0 && index < _items.length) {
+       return this.removeAt(index) !=null;
+    }
+    return false;
   }
   
   E removeAt(int index) {

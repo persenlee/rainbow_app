@@ -27,10 +27,11 @@ class _FeedCardState extends State<FeedCard> {
   @override
   Widget build(BuildContext context) {
     return widget.animation !=null ? 
-      SizeTransition(
-        sizeFactor: widget.animation,
-        child: _getCard(context)
-      ) 
+      // SizeTransition(
+      //   sizeFactor: widget.animation,
+      //   child: _getCard(context)
+      // ) 
+      ScaleTransition(child: _getCard(context),scale: widget.animation,)
       :
       _getCard(context);
   }
@@ -39,6 +40,7 @@ class _FeedCardState extends State<FeedCard> {
     return Card(
         clipBehavior: Clip.antiAlias,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             AspectRatio(
@@ -55,7 +57,8 @@ class _FeedCardState extends State<FeedCard> {
               ),
             ),
             //Expanded can not set in listview
-            Expanded(
+            Flexible(
+              fit: FlexFit.loose,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
                 child: 
