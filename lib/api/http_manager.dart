@@ -7,7 +7,7 @@ import 'package:Rainbow/supplemental/user_storage.dart';
 class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
-  final baseUrl = /*'http://192.168.0.200:8000';*/ 'http://192.168.3.5:8000';
+  String baseUrl = 'http://192.168.3.5:8000';
   CookieJar cj;
 
   HttpManager() {
@@ -29,6 +29,7 @@ class HttpManager {
   }
 
   resetBaseUrl(String baseUrl){
+    this.baseUrl =baseUrl;
     httpClient.options.baseUrl =baseUrl;
   }
 

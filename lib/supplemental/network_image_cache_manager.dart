@@ -26,7 +26,7 @@ class NetworkImageCacheManager extends BaseCacheManager {
   Future<int> cacheSize() async {
     String folderPath =await getFilePath();
     Stream<FileSystemEntity> files = Directory(folderPath).list(recursive: true,followLinks: false);
-    int size = await files.length;
+    int size = (await files.length ~/ 1024);
     return size;
   }
 
