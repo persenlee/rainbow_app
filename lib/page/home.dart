@@ -29,6 +29,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final String pageTag = 'home_feed';
   ScrollController _scrollController;
   bool _isLoading = false;
   int _page = 1;
@@ -115,9 +116,10 @@ class _HomePageState extends State<HomePage> {
         itemBuilder: (BuildContext context, int pos) {
           return FeedCard(
               feed: feedList[pos],
+              refPageTag: pageTag,
               imageTapCallBack: () {
                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-                  return new GalleryPage(feedList: feedList, index: pos);
+                  return new GalleryPage(feedList: feedList, index: pos,refPageTag: pageTag,);
                 }));
               },
               likeCallBack: (feed) {

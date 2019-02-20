@@ -11,8 +11,9 @@ class FeedCard extends StatefulWidget {
   final FeedCardLikeCallBack likeCallBack;
   final FeedCardImageTapCallBack imageTapCallBack;
   final Animation<double> animation;
+  final String refPageTag;
 
-  const FeedCard({Key key,this.feed,this.animation,this.imageTapCallBack,this.likeCallBack}): super(key:key);
+  const FeedCard({Key key,this.feed,this.animation,this.refPageTag,this.imageTapCallBack,this.likeCallBack}): super(key:key);
   @override
   State<StatefulWidget> createState() {
     return _FeedCardState();
@@ -50,7 +51,7 @@ class _FeedCardState extends State<FeedCard> {
               child: GestureDetector(
                 child: Hero(
                   child: CachedNetworkImage(imageUrl:feed.thumbSrc,cacheManager: NetworkImageCacheManager(),),
-                  tag:  feed.id.toString(),
+                  tag:  widget.refPageTag + feed.id.toString(),
                   transitionOnUserGestures: true,
                 ),
                 onTap: () {
@@ -58,7 +59,6 @@ class _FeedCardState extends State<FeedCard> {
                 },
               ),
             ),
-            //Expanded can not set in listview
             Flexible(
               fit: FlexFit.loose,
               child: Padding(

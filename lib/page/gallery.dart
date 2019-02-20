@@ -8,7 +8,8 @@ import 'package:Rainbow/supplemental/action.dart';
 class GalleryPage extends StatefulWidget {
   final List<Feed> feedList;
   final int index;
-  const GalleryPage({Key key, this.feedList, this.index}) : super(key: key);
+  final String refPageTag;
+  const GalleryPage({Key key, this.feedList, this.index, this.refPageTag}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
     return _GalleryPageState();
@@ -75,7 +76,7 @@ class _GalleryPageState extends State<GalleryPage> {
     return widget.feedList.map((feed) {
       return PhotoViewGalleryPageOptions(
           imageProvider: NetworkImage(feed.src),
-          heroTag: feed.id.toString(),
+          heroTag:  widget.refPageTag + feed.id.toString(),
           initialScale: PhotoViewComputedScale.contained,
           minScale: PhotoViewComputedScale.contained,
           maxScale: PhotoViewComputedScale.contained * 3);

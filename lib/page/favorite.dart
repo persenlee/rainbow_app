@@ -14,6 +14,7 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
+  final String pageTag = 'favorite_feed';
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   ScrollController _scrollController;
   bool _isLoading = false;
@@ -91,9 +92,10 @@ class _FavoritePageState extends State<FavoritePage> {
       child: FeedCard(
         feed: feedList[index],
         animation: animation,
+        refPageTag: pageTag,
         imageTapCallBack: () {
           Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-            return new GalleryPage(feedList: feedList.unwrapList(), index: index);
+            return new GalleryPage(feedList: feedList.unwrapList(), index: index, refPageTag: pageTag,);
           }));
         },
         likeCallBack: (feed) {
