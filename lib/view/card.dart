@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Rainbow/model/feed.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:Rainbow/supplemental/network_image_cache_manager.dart';
 
 typedef FeedCardLikeCallBack = void Function(Feed feed);
 typedef FeedCardImageTapCallBack = void Function();
@@ -47,7 +49,7 @@ class _FeedCardState extends State<FeedCard> {
               aspectRatio: 18 / 11,
               child: GestureDetector(
                 child: Hero(
-                  child: Image.network(feed.thumbSrc),
+                  child: CachedNetworkImage(imageUrl:feed.thumbSrc,cacheManager: NetworkImageCacheManager(),),
                   tag:  feed.id.toString(),
                   transitionOnUserGestures: true,
                 ),
