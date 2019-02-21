@@ -124,13 +124,17 @@ class _HomePageState extends State<HomePage> {
               },
               likeCallBack: (feed) {
                 like(feed);
-              });
+              },
+              reportCallBack: (feed,reportId){
+                Action.report(context, feed, reportId, null, null);
+              }
+              ,);
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            childAspectRatio: 8.0 / 10.0),
+            childAspectRatio: 8.0 / 11.3),
       );
     }
   }

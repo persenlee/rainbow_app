@@ -69,5 +69,9 @@ class ConfigStorage{
       return null;
     }
   }
+
+  reports() {
+    return _reports;
+  }
   
 }

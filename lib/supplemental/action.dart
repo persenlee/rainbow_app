@@ -9,7 +9,8 @@ typedef VoidSuccessCallback = void Function();
 typedef VoidFailureCallback = void Function();
 
 class Action {
-  static like(BuildContext context,Feed feed,VoidSuccessCallback successCallBack,VoidFailureCallback failCallback){
+  static like(BuildContext context, Feed feed,
+      VoidSuccessCallback successCallBack, VoidFailureCallback failCallback) {
     UserStorage.getInstance().readUser().then((user) {
       if (user != null && user.id > 0) {
         FeedAPI.like(feed.id, !feed.like).then((response) {
@@ -17,14 +18,39 @@ class Action {
             feed.like = !feed.like;
             int count = (feed.like ? feed.likeCount + 1 : feed.likeCount - 1);
             feed.likeCount = max(count, 0);
-            successCallBack();
+            if (successCallBack != null) {
+              successCallBack();
+            }
           } else {
-            failCallback();
+            if (failCallback != null) {
+              failCallback();
+            }
           }
         });
       } else {
         Navigator.of(context).pushNamed('/login');
       }
     });
+  }
+
+  static report(BuildContext context, Feed feed, int reportId,
+      VoidSuccessCallback successCallBack, VoidFailureCallback failCallback) {
+    if (feed != null && reportId != null) {
+      FeedAPI.report(feed.id, reportId, null).then((response) {
+        if (response.code == WrapCode.Ok) {
+          if (successCallBack != null) {
+            successCallBack();
+          }
+        } else {
+          if (failCallback != null) {
+            failCallback();
+          }
+        }
+      });
+    } else {
+      if (failCallback != null) {
+        failCallback();
+      }
+    }
   }
 }
