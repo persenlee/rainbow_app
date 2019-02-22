@@ -4,6 +4,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:Rainbow/model/feed.dart';
 import 'dart:math';
 import 'package:Rainbow/supplemental/action.dart';
+import 'package:Rainbow/view/feed_toolbar.dart';
 
 class GalleryPage extends StatefulWidget {
   final List<Feed> feedList;
@@ -29,13 +30,14 @@ class _GalleryPageState extends State<GalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black87,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
           PhotoViewGallery(
             pageOptions: _buidGalleryPageOptions(context),
             pageController: _pageController,
-            backgroundDecoration: BoxDecoration(color: Colors.black87),
+            backgroundDecoration: BoxDecoration(color: Colors.transparent),
             transitionOnUserGestures: true,
             onPageChanged: (page) {
               setState(() {
@@ -56,13 +58,14 @@ class _GalleryPageState extends State<GalleryPage> {
           ),
           Positioned(
             left: 24,
-            bottom: 24,
-            child: IconButton(
-              iconSize: 36,
-              icon: ((this.currentFeed == null || this.currentFeed.like == false) ?  Icon(Icons.favorite_border) : Icon(Icons.favorite)),
-              color: Colors.red,
-              onPressed: (){
-                like(this.currentFeed);
+            right: 24,
+            bottom: 36,
+            height: 48,
+            child: FeedToolBar(
+              feed: this.currentFeed,
+              color: Colors.white,
+              likeCallBack: (feed){
+                like(feed);
               },
             ),
           )

@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:Rainbow/model/feed.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:Rainbow/supplemental/network_image_cache_manager.dart';
-import 'package:Rainbow/supplemental/config_storage.dart';
+import 'feed_toolbar.dart';
 
-typedef FeedCardLikeCallBack = void Function(Feed feed);
 typedef FeedCardImageTapCallBack = void Function();
-typedef FeedCardReportCallBack = void Function(Feed feed,int reportId);
 
 class FeedCard extends StatefulWidget {
   final Feed feed;
-  final FeedCardLikeCallBack likeCallBack;
   final FeedCardImageTapCallBack imageTapCallBack;
+  final FeedCardLikeCallBack likeCallBack;
   final FeedCardReportCallBack reportCallBack;
+  final FeedCardShareCallBack shareCallBack;
+
   final Animation<double> animation;
   final String refPageTag;
 
@@ -23,7 +23,9 @@ class FeedCard extends StatefulWidget {
       this.refPageTag,
       this.imageTapCallBack,
       this.likeCallBack,
-      this.reportCallBack})
+      this.reportCallBack,
+      this.shareCallBack
+      })
       : super(key: key);
   @override
   State<StatefulWidget> createState() {
@@ -33,15 +35,9 @@ class FeedCard extends StatefulWidget {
 
 class _FeedCardState extends State<FeedCard> {
   Feed feed;
-  List<Report> reports;
   @override
   void initState() {
     feed = widget.feed;
-    ConfigStorage.getInstance().then((ConfigStorage storage) {
-      setState(() {
-        reports = storage.reports();
-      });
-    });
     super.initState();
   }
 
@@ -87,7 +83,7 @@ class _FeedCardState extends State<FeedCard> {
           Flexible(
             fit: FlexFit.loose,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 8.0),
+              padding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 8.0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,44 +94,14 @@ class _FeedCardState extends State<FeedCard> {
                     maxLines: 1,
                   ),
                   SizedBox(
-                    height: 6.0,
+                    height: 12.0,
                   ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: FlatButton.icon(
-                      padding: EdgeInsets.zero,
-                      label: Text(
-                        feed.likeCount == null
-                            ? '0'
-                            : feed.likeCount.toString(),
-                        style: theme.textTheme.body2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      icon: Icon(
-                        feed.like != null && feed.like
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        semanticLabel: 'like',
-                      ),
-                      onPressed: () {
-                        widget.likeCallBack(feed);
-                      },
-                    ),
+                  FeedToolBar(
+                    feed: feed,
+                    likeCallBack: widget.likeCallBack,
+                    shareCallBack: widget.shareCallBack,
+                    reportCallBack: widget.reportCallBack,
                   ),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: PopupMenuButton(
-                      padding: EdgeInsets.zero,
-                      icon: Icon(
-                        Icons.report,
-                        semanticLabel: 'report',
-                      ),
-                      itemBuilder: _reportsItemBuilder,
-                      onSelected: (reportId){
-                        widget.reportCallBack(feed,reportId);
-                      },
-                    ),
-                  )
                 ],
               ),
             ),
@@ -143,14 +109,5 @@ class _FeedCardState extends State<FeedCard> {
         ],
       ),
     );
-  }
-
-  List<PopupMenuEntry<dynamic>> _reportsItemBuilder(BuildContext context) {
-    return reports.map((Report report) {
-      return PopupMenuItem(
-        value: report.id,
-        child: Text(report.reason),
-      );
-    }).toList();
   }
 }

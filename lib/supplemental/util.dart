@@ -3,10 +3,32 @@ import 'package:sensors/sensors.dart';
 
 enum BuildMode { release, profile, debug }
 
+enum BaseUrlMode {Local_Home,Local_Company,Develop,Release}
+
 typedef MotionShakeDetectCallback = void Function(bool);
 
 class Util {
   static final MotionShakeDetector shakeDetector =MotionShakeDetector();
+  
+  static String baseUrlForMode(BaseUrlMode mode)
+  {
+    String baseUrl;
+    switch (mode) {
+      case BaseUrlMode.Local_Home:
+        baseUrl = 'http://192.168.3.5:8000';
+        break;
+      case BaseUrlMode.Local_Company:
+        baseUrl = 'http://192.168.0.200:8000';
+        break;
+      case BaseUrlMode.Develop:
+        break;
+      case BaseUrlMode.Release:
+        break;
+      default:
+    }
+    return baseUrl;
+  }
+
   static String genderConvert(int gender) {
     String genderStr = 'Male';
     switch (gender) {

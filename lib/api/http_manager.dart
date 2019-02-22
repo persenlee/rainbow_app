@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:Rainbow/supplemental/user_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
-  String baseUrl = 'http://192.168.3.5:8000';
+  String baseUrl = 'http://192.168.0.200:8000';
   CookieJar cj;
+  SharedPreferences prefs;
 
   HttpManager() {
     httpClient.options.baseUrl = baseUrl;
@@ -22,6 +24,12 @@ class HttpManager {
   static sharedInstance() async {
     if (_instance == null) {
       _instance = HttpManager();
+      _instance.prefs = await SharedPreferences.getInstance();
+      String storedBaseUrl = _instance.prefs.getString('base_url');
+      if (storedBaseUrl !=null) {
+        _instance.baseUrl =storedBaseUrl;
+        _instance.httpClient.options.baseUrl =storedBaseUrl;
+      }
       await _instance._addCookieManager();
       _instance._listenSessionExpire();
     }
@@ -31,6 +39,7 @@ class HttpManager {
   resetBaseUrl(String baseUrl){
     this.baseUrl =baseUrl;
     httpClient.options.baseUrl =baseUrl;
+    prefs.setString('base_url', baseUrl);
   }
 
   _addCookieManager() async {

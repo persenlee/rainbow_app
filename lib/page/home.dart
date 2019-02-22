@@ -134,7 +134,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisCount: 2,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            childAspectRatio: 8.0 / 11.3),
+            childAspectRatio: 8.0 / 9.5),
       );
     }
   }
@@ -201,8 +201,14 @@ class _HomePageState extends State<HomePage> {
             context: context,
             builder:(BuildContext context) => getSheet(context)
           ).then((value){
+            String baseUrl ;
+            if (value == 1) {
+              baseUrl =Util.baseUrlForMode(BaseUrlMode.Local_Company);
+            } else if(value == 2){
+              baseUrl =Util.baseUrlForMode(BaseUrlMode.Local_Home);
+            }
             HttpManager.sharedInstance().then((manager){
-              manager.resetBaseUrl(value);
+              manager.resetBaseUrl(baseUrl);
             });
             _sheet =null;
           });

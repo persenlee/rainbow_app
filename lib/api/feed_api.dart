@@ -47,7 +47,7 @@ class FeedAPI extends BaseAPI{
   static report(int feedId,int reportId,String reportReason) async{
     const url = '/feed/report';
     try {
-      Map params = {'id':feedId,'reportId':reportId};
+      Map params = {'id':feedId,'report_id':reportId};
       if(reportReason != null && reportReason.trim().length > 0) {
         params['report_reason'] = reportReason;
       }
