@@ -1,6 +1,7 @@
 import 'dart:convert';
 import '../model/feed.dart';
 import './base_api.dart';
+import 'package:Rainbow/supplemental/config_storage.dart';
 
 class FeedAPI extends BaseAPI{
   static getFeeds(int page, int perPage) async {
@@ -19,7 +20,10 @@ class FeedAPI extends BaseAPI{
           } else {
             List tags = List();
             for (int t in json.decode(tagStr)){
-              tags.add({'id' : t,'name' : ''});
+              ConfigStorage storage =await ConfigStorage.getInstance();
+              String name = storage.tagNameById(t);
+              name =name ==null ? 'other' : name; 
+              tags.add({'id' : t,'name' : name});
             }
             map['tags'] = tags;
           }

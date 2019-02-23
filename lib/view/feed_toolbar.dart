@@ -32,14 +32,15 @@ class _FeedToolBarState extends State<FeedToolBar> {
   List<Report> reports;
   @override
   void initState() {
+    super.initState();
     feed = widget.feed;
     _getReports();
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
+    feed = widget.feed;
     return ButtonTheme(
       minWidth: 36,
       buttonColor: widget.color,
