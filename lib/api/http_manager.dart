@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
-  String baseUrl = 'http://192.168.0.200:8000';
+  String baseUrl = 'http://192.168.3.5:8000';
   CookieJar cj;
   SharedPreferences prefs;
 

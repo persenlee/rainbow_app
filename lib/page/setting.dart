@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:Rainbow/supplemental/network_image_cache_manager.dart';
-import 'package:share/share.dart';
 import 'webview.dart';
 import 'package:Rainbow/api/http_manager.dart';
 import 'package:path/path.dart' as p;
+import 'package:Rainbow/supplemental/util.dart';
 
 class SettingPage extends StatefulWidget {
   @override
@@ -97,7 +97,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   _share(){
-    Share.share('Share Rainbow To Friends');
+    Util.share('Share Rainbow To Friends', 'http://www.github.com', null);
   }
 
   _about(BuildContext context){

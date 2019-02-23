@@ -115,20 +115,24 @@ class _HomePageState extends State<HomePage> {
         itemCount: feedList.length,
         itemBuilder: (BuildContext context, int pos) {
           return FeedCard(
-              feed: feedList[pos],
-              refPageTag: pageTag,
-              imageTapCallBack: () {
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-                  return new GalleryPage(feedList: feedList, index: pos,refPageTag: pageTag,);
-                }));
-              },
-              likeCallBack: (feed) {
-                like(feed);
-              },
-              reportCallBack: (feed,reportId){
-                Action.report(context, feed, reportId, null, null);
-              }
-              ,);
+            feed: feedList[pos],
+            refPageTag: pageTag,
+            imageTapCallBack: () {
+              Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
+                return new GalleryPage(
+                  feedList: feedList,
+                  index: pos,
+                  refPageTag: pageTag,
+                );
+              }));
+            },
+            likeCallBack: (feed) {
+              like(feed);
+            },
+            reportCallBack: (feed, reportId) {
+              Action.report(context, feed, reportId, null, null);
+            },
+          );
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -165,54 +169,50 @@ class _HomePageState extends State<HomePage> {
 
   CupertinoActionSheet _sheet;
 
-  getSheet(BuildContext context){
-    if (_sheet ==null) {
+  getSheet(BuildContext context) {
+    if (_sheet == null) {
       _sheet = CupertinoActionSheet(
-            title: Text('API http domain switch'),
-            message: Text('switch api domain only for develop using'),
-            cancelButton: CupertinoActionSheetAction(
-              child: Text('Cancel'),
-              onPressed: (){
-                Navigator.pop(context);
-              },
-            ),
-            actions: 
-          <Widget>[
+          title: Text('API http domain switch'),
+          message: Text('switch api domain only for develop using'),
+          cancelButton: CupertinoActionSheetAction(
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          actions: <Widget>[
             CupertinoActionSheetAction(
-              child: Text('Company [http://192.168.0.200:8000]'),
-              onPressed: (){
-                Navigator.pop(context);
-              }),
+                child: Text('Company [http://192.168.0.200:8000]'),
+                onPressed: () {
+                  Navigator.pop(context, BaseUrlMode.Local_Company);
+                }),
             CupertinoActionSheetAction(
-              child: Text('Home [http://192.168.3.5:8000]'),
-              onPressed: (){
-                Navigator.pop(context);
-              }),
+                child: Text('Home [http://192.168.3.5:8000]'),
+                onPressed: () {
+                  Navigator.pop(context, BaseUrlMode.Local_Home);
+                }),
           ]);
     }
     return _sheet;
   }
 
   _baseUrlChange(BuildContext context) {
-    if (Util.buildMode() ==BuildMode.debug) {
-      Util.listenMotionShake((result){
-        if (result && _sheet ==null) {
+    if (Util.buildMode() == BuildMode.debug) {
+      Util.listenMotionShake((result) {
+        if (result && _sheet == null) {
           showCupertinoModalPopup(
-            context: context,
-            builder:(BuildContext context) => getSheet(context)
-          ).then((value){
-            String baseUrl ;
-            if (value == 1) {
-              baseUrl =Util.baseUrlForMode(BaseUrlMode.Local_Company);
-            } else if(value == 2){
-              baseUrl =Util.baseUrlForMode(BaseUrlMode.Local_Home);
+                  context: context,
+                  builder: (BuildContext context) => getSheet(context))
+              .then((value) {
+            if (value != null) {
+              String baseUrl;
+              baseUrl = Util.baseUrlForMode(value);
+              HttpManager.sharedInstance().then((manager) {
+                manager.resetBaseUrl(baseUrl);
+              });
             }
-            HttpManager.sharedInstance().then((manager){
-              manager.resetBaseUrl(baseUrl);
-            });
-            _sheet =null;
+            _sheet = null;
           });
-          
         }
       });
     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Rainbow/model/feed.dart';
 import 'package:Rainbow/supplemental/config_storage.dart';
+import 'package:Rainbow/supplemental/util.dart';
 
 typedef FeedCardLikeCallBack = void Function(Feed feed);
 typedef FeedCardReportCallBack = void Function(Feed feed, int reportId);
@@ -74,7 +75,12 @@ class _FeedToolBarState extends State<FeedToolBar> {
               color: widget.color,
             ),
             onPressed: () {
-              widget.shareCallBack(feed);
+              if (widget.shareCallBack !=null) {
+                widget.shareCallBack(feed);
+              } else {
+                Util.share('Share Rainbow Image', feed.src, feed.thumbSrc);
+              }
+              
             },
           ),
           PopupMenuButton(

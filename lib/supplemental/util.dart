@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:sensors/sensors.dart';
+import 'package:native_share/native_share.dart';
 
 enum BuildMode { release, profile, debug }
 
@@ -56,6 +57,20 @@ class Util {
 
   static listenMotionShake(MotionShakeDetectCallback callback){
     Util.shakeDetector.detectShake(callback);
+  }
+
+  static share(String title,String url,String image) {
+    Map<String,dynamic> params =Map();
+    if(title !=null && title.trim().length > 0) {
+      params['title'] =title;
+    }
+    if(url !=null && url.trim().length > 0) {
+      params['url'] =url;
+    }
+    if(image !=null && image.trim().length > 0) {
+      params['image'] =image;
+    }
+    NativeShare.share(params);
   }
 }
 

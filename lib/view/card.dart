@@ -94,7 +94,7 @@ class _FeedCardState extends State<FeedCard> {
                     maxLines: 1,
                   ),
                   SizedBox(
-                    height: 12.0,
+                    height: 8.0,
                   ),
                   FeedToolBar(
                     feed: feed,
