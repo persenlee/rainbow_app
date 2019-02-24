@@ -34,11 +34,16 @@ class BaseAPI {
       wr.response = response;
       wr.code =
           response.statusCode == HttpStatus.ok ? WrapCode.Ok : WrapCode.Fail;
+
+      if (wr.code == WrapCode.Fail) {
+        wr.msg = 'requst error,please try again';
+      }
       return wr;
     } on DioError catch (e) {
       WrapResponse wr = WrapResponse();
       wr.response = e.response;
       wr.code = WrapCode.Fail;
+       wr.msg = 'requst error,please try again';
       return wr;
     } catch (e) {
       throw e;

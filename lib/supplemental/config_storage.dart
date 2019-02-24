@@ -73,5 +73,9 @@ class ConfigStorage{
   reports() {
     return _reports;
   }
+
+  tags() {
+    return _tags;
+  }
   
 }

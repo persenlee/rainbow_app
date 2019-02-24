@@ -28,6 +28,8 @@ class Tag {
   String name;
   factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
   Map<String, dynamic> toJson() => _$TagToJson(this);
+  bool operator ==(obj)=> obj is Tag && obj.id == id;
+  int get hashCode => id.hashCode;
 }
 
 @JsonSerializable()

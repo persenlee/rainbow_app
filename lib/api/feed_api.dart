@@ -61,10 +61,21 @@ class FeedAPI extends BaseAPI{
     }
   }
 
-  static tag(int feedId,int tagId) async {
-    const url = '/feed/tag';
+  static tags(int feedId,List<Tag> tags) async {
+    const url = '/feed/tags';
+    if (tags == null || feedId ==null) {
+      WrapResponse response =WrapResponse();
+      response.code = WrapCode.Fail;
+      response.msg = 'feedId or tags is null';
+      return response;
+    }
     try {
-      Map params = {'id':feedId,'tag_id':tagId};
+      List tagIds =tags.map((Tag tag){
+        return tag.id;
+      }).toList();
+
+      String tagIdsJsonStr = json.encode(tagIds);
+      Map params = {'id':feedId,'tag_ids':tagIdsJsonStr};
       var response = await BaseAPI.requestUrl(url, HttpMethod.Post, params);
       return response;
     } catch (e) {

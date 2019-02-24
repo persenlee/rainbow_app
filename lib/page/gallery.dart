@@ -6,9 +6,8 @@ import 'dart:math';
 import 'package:Rainbow/supplemental/action.dart';
 import 'package:Rainbow/view/feed_toolbar.dart';
 import 'package:flutter_tags/selectable_tags.dart' as TagsView;
-import 'webview.dart';
-import 'package:Rainbow/api/http_manager.dart';
-import 'package:path/path.dart' as p;
+import 'package:Rainbow/view/tags_dialog.dart';
+import 'package:Rainbow/api/feed_api.dart';
 
 class GalleryPage extends StatefulWidget {
   final List<Feed> feedList;
@@ -103,14 +102,15 @@ class _GalleryPageState extends State<GalleryPage> {
     );
   }
 
-  _addTag(BuildContext context, TagsView.Tag tag) async {
-    HttpManager manager = await HttpManager.sharedInstance();
-    String baseUrl = manager.baseUrl;
-    String url = p.join(baseUrl, 'system/add_tag');
-    Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-      return new WebviewPage(title: 'Add Tag', url: url);
-    }));
+  _addTag(BuildContext context, TagsView.Tag tag) {
+    showDialog(context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context){
+      return TagsDialog(feed: this.currentFeed);
+    });
   }
+
+ 
 
   _upateTags() {
     TagsView.Tag addTag = TagsView.Tag(
