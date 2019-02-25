@@ -7,7 +7,6 @@ import 'package:Rainbow/supplemental/action.dart';
 import 'package:Rainbow/view/feed_toolbar.dart';
 import 'package:flutter_tags/selectable_tags.dart' as TagsView;
 import 'package:Rainbow/view/tags_dialog.dart';
-import 'package:Rainbow/api/feed_api.dart';
 
 class GalleryPage extends StatefulWidget {
   final List<Feed> feedList;

@@ -29,9 +29,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   final String pageTag = 'home_feed';
   ScrollController _scrollController;
   bool _isLoading = false;
+  bool _bottomRefresh =false;
   int _page = 1;
   List<Feed> feedList = List();
 
@@ -62,29 +64,46 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         drawer: HomeDrawerPage(),
-        body: new Stack(
-          children: <Widget>[
-            _buildFeeds(context),
-            _loader(),
-          ],
-        ));
+        body: 
+        RefreshIndicator(
+          key: _refreshIndicatorKey,
+          child: _buildFeeds(context),
+          onRefresh: _handlePaginator,
+        )
+        );
+  }
+
+  Future<Null> _handlePaginator() async{
+    //prefresh or paginator
+    _isLoading = true;
+    _page =_bottomRefresh ? _page : 1;
+    var response = await FeedAPI.getFeeds(_page, 10);
+    _isLoading = false;
+    List<Feed> feeds = response.result;
+      if (feeds != null && feeds.length > 0) {
+        if (this.mounted) {
+          setState(() {
+          if (_page == 1) {
+            feedList.clear();
+          }
+          feedList.addAll(feeds);
+          _page++;
+        });
+        }
+      } 
+      return null;
   }
 
   _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      _startLoader();
+          _bottomRefresh =true;
+          _refreshIndicatorKey.currentState.show(atTop:false);
+    } else {
+        _bottomRefresh = false;
     }
   }
 
-  _startLoader() {
-    if (false == _isLoading) {
-      setState(() {
-        _isLoading = true;
-        _fetchData();
-      });
-    }
-  }
 
   _fetchData() {
     FeedAPI.getFeeds(_page, 10).then((response) {
@@ -105,9 +124,7 @@ class _HomePageState extends State<HomePage> {
 
   _buildFeeds(BuildContext context) {
     if (feedList == null || feedList.length == 0) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+      return Center(child: CircularProgressIndicator());
     } else {
       return GridView.builder(
         padding: EdgeInsets.all(16.0),
@@ -141,24 +158,6 @@ class _HomePageState extends State<HomePage> {
             childAspectRatio: 8.0 / 9.5),
       );
     }
-  }
-
-  Widget _loader() {
-    return _isLoading
-        ? new Align(
-            child: new Container(
-              width: 70.0,
-              height: 70.0,
-              child: new Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: new Center(child: new CircularProgressIndicator())),
-            ),
-            alignment: FractionalOffset.bottomCenter,
-          )
-        : new SizedBox(
-            width: 0.0,
-            height: 0.0,
-          );
   }
 
   void like(Feed feed) {
