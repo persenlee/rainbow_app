@@ -106,6 +106,9 @@ class _HomePageState extends State<HomePage> {
 
 
   _fetchData() {
+    setState(() {
+    _isLoading =true;
+    });
     FeedAPI.getFeeds(_page, 10).then((response) {
       List<Feed> feeds = response.result;
       if (feeds != null && feeds.length > 0) {
@@ -124,7 +127,19 @@ class _HomePageState extends State<HomePage> {
 
   _buildFeeds(BuildContext context) {
     if (feedList == null || feedList.length == 0) {
-      return Center(child: CircularProgressIndicator());
+      return _isLoading ? 
+      Center(child: CircularProgressIndicator()) 
+      : 
+       Center(
+         child:
+        FlatButton(
+          color: Colors.blueAccent,
+          textColor: Colors.white,
+          child: Text('Retry'),
+          onPressed: (){
+            _fetchData();
+          },)
+        );
     } else {
       return GridView.builder(
         padding: EdgeInsets.all(16.0),

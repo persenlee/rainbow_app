@@ -14,11 +14,13 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
+  final _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   final String pageTag = 'favorite_feed';
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   ScrollController _scrollController;
   bool _isLoading = false;
   int _page = 1;
+  bool _bottomRefresh =false;
   AnimatableList<Feed> feedList;
 
   @override
@@ -39,29 +41,51 @@ class _FavoritePageState extends State<FavoritePage> {
       appBar: AppBar(
         title: Text('Favorite'),
       ),
-      body: Stack(
-        children: <Widget>[_buildFeeds(context), _loader()],
+      body: RefreshIndicator(
+        key: _refreshIndicatorKey,
+        child: _buildFeeds(context),
+        onRefresh: _handlePaginator,
       ),
     );
   }
 
-  _scrollListener() {
+
+  Future<Null> _handlePaginator() async{
+    //prefresh or paginator
+    _isLoading = true;
+    _page =_bottomRefresh ? _page : 1;
+    var response = await UserAPI.likes(_page, 10);
+    _isLoading = false;
+    List<Feed> feeds = response.result;
+      if (feeds != null && feeds.length > 0) {
+        if (this.mounted) {
+          setState(() {
+          if (_page == 1) {
+            feedList.clear();
+          }
+          feedList.addAll(feeds);
+          _page++;
+        });
+        }
+      } 
+      return null;
+  }
+
+_scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      _startLoader();
+          _bottomRefresh =true;
+          _refreshIndicatorKey.currentState.show(atTop:false);
+    } else {
+        _bottomRefresh = false;
     }
   }
 
-  _startLoader() {
-    if (false == _isLoading) {
-      setState(() {
-        _isLoading = true;
-        _fetchData();
-      });
-    }
-  }
 
   _fetchData() {
+    setState(() {
+      _isLoading =true;
+    });
     UserAPI.likes(_page, 10).then((response) {
       List<Feed> feeds = response.result;
       if (feeds != null && feeds.length > 0) {
@@ -106,7 +130,19 @@ class _FavoritePageState extends State<FavoritePage> {
 
   _buildFeeds(BuildContext context) {
     if (feedList == null || feedList.length == 0) {
-      return SizedBox();
+      return _isLoading ? 
+      Center(child: CircularProgressIndicator()) 
+      : 
+       Center(
+         child:
+        FlatButton(
+          color: Colors.blueAccent,
+          textColor: Colors.white,
+          child: Text('Retry'),
+          onPressed: (){
+            _fetchData();
+          },)
+        );
     } else {
       return  AnimatedList(
           initialItemCount: feedList.length,
@@ -116,26 +152,6 @@ class _FavoritePageState extends State<FavoritePage> {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       );
     }
-  }
-
-  Widget _loader() {
-    return _isLoading
-        ? new Align(
-            child: new Container(
-              width: 70.0,
-              height: 70.0,
-              child: new Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: new Center(child: new CircularProgressIndicator())),
-            ),
-            alignment: feedList.length == 0
-                ? FractionalOffset.center
-                : FractionalOffset.bottomCenter,
-          )
-        : new SizedBox(
-            width: 0.0,
-            height: 0.0,
-          );
   }
 
   void like(Feed feed) {

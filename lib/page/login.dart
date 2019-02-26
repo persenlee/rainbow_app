@@ -38,15 +38,16 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    UserStorage.getInstance().readLastEmail().then((email){
-      if(email != null && email.trim().length > 0) {
+    UserStorage.getInstance().readLastEmail().then((email) {
+      if (email != null && email.trim().length > 0) {
         setState(() {
-        _usernameController = TextEditingController(text:email);
-      });
+          _usernameController = TextEditingController(text: email);
+        });
       }
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     _usernameController.addListener(() {
@@ -58,108 +59,114 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       key: _scaffoldState,
       body: SafeArea(
-          child: Stack(
-        children: <Widget>[
-          ListView(
-            padding: EdgeInsets.symmetric(horizontal: 24.0),
-            children: <Widget>[
-              SizedBox(height: 80.0),
-              Column(
+          child: GestureDetector(
+              onTap: () {FocusScope.of(context).requestFocus(new FocusNode());},
+              child: Stack(
                 children: <Widget>[
-                  Image.asset('assets/diamond.png'),
-                  SizedBox(height: 16.0),
-                  Text('Rainbow'),
-                ],
-              ),
-              SizedBox(height: 80.0),
-              TextField(
-                focusNode: _userNameFocusNode,
-                decoration: InputDecoration(
-                    filled: true,
-                    hintText: 'Email',
-                    errorText: _emailErrorText),
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                controller: _usernameController,
-                autofocus: true,
-                enabled: !_loading,
-                onEditingComplete: () {
-                  if (_checkEmail()) {
-                    FocusScope.of(context).requestFocus(_passwordFocusNode);
-                  }
-                },
-              ),
-              // spacer
-              SizedBox(height: 18.0),
-              // [Password]
-              TextField(
-                focusNode: _passwordFocusNode,
-                decoration: InputDecoration(
-                    filled: true,
-                    hintText: 'Password',
-                    errorText: _passwordErrorText),
-                obscureText: true,
-                enabled: !_loading,
-                controller: _passwordController,
-                onEditingComplete: () {
-                  if (_checkPassword()) {
-                    // _doLogin();
-                  }
-                },
-              ),
-              SizedBox(height: 18.0),
-              Container(
-                height: 46,
-                child: RaisedButton(
-                  key: _loginButtonKey,
-                  child: Text('Sign In'),
-                  textColor: Colors.white,
-                  color: Colors.lightBlue,
-                  onPressed: () {
-                    _doLogin();
-                  },
-                ),
-              ),
-              SizedBox(height: 24.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).pushNamed('/register').then((result){
-                    setState(() {
-                      _usernameController = TextEditingController(text:result);
-                    });
-                  });
-                },
-                child: Text('No Account Yet？Click to Sign Up',
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        color: Colors.blue)),
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              opacity: _loading ? 1 : 0,
-              child: CircularProgressIndicator(),
-              duration: Duration(milliseconds: 100),
-            ),
-          ),
-          new Align(
-                alignment: FractionalOffset.topLeft,
-                child: new Container(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.close,
-                      semanticLabel: 'back',
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  ListView(
+                    padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    children: <Widget>[
+                      SizedBox(height: 80.0),
+                      Column(
+                        children: <Widget>[
+                          Image.asset('assets/diamond.png'),
+                          SizedBox(height: 16.0),
+                          Text('Rainbow'),
+                        ],
+                      ),
+                      SizedBox(height: 80.0),
+                      TextField(
+                        focusNode: _userNameFocusNode,
+                        decoration: InputDecoration(
+                            filled: true,
+                            hintText: 'Email',
+                            errorText: _emailErrorText),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        controller: _usernameController,
+                        autofocus: true,
+                        enabled: !_loading,
+                        onEditingComplete: () {
+                          if (_checkEmail()) {
+                            FocusScope.of(context)
+                                .requestFocus(_passwordFocusNode);
+                          }
+                        },
+                      ),
+                      // spacer
+                      SizedBox(height: 18.0),
+                      // [Password]
+                      TextField(
+                        focusNode: _passwordFocusNode,
+                        decoration: InputDecoration(
+                            filled: true,
+                            hintText: 'Password',
+                            errorText: _passwordErrorText),
+                        obscureText: true,
+                        enabled: !_loading,
+                        controller: _passwordController,
+                        onEditingComplete: () {
+                          if (_checkPassword()) {
+                            _doLogin();
+                          }
+                        },
+                      ),
+                      SizedBox(height: 18.0),
+                      Container(
+                        height: 46,
+                        child: RaisedButton(
+                          key: _loginButtonKey,
+                          child: Text('Sign In'),
+                          textColor: Colors.white,
+                          color: Colors.lightBlue,
+                          onPressed: () {
+                            _doLogin();
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 24.0),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context)
+                              .pushNamed('/register')
+                              .then((result) {
+                            setState(() {
+                              _usernameController =
+                                  TextEditingController(text: result);
+                            });
+                          });
+                        },
+                        child: Text('No Account Yet？Click to Sign Up',
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue)),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-        ],
-      )),
+                  Align(
+                    alignment: Alignment.center,
+                    child: AnimatedOpacity(
+                      opacity: _loading ? 1 : 0,
+                      child: CircularProgressIndicator(),
+                      duration: Duration(milliseconds: 100),
+                    ),
+                  ),
+                  new Align(
+                    alignment: FractionalOffset.topLeft,
+                    child: new Container(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          semanticLabel: 'back',
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ))),
     );
   }
 

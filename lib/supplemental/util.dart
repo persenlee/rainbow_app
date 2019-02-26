@@ -77,7 +77,7 @@ class Util {
 
 
 class MotionShakeDetector {
-  static final int SHAKE_THRESHOLD = 1500;
+  static final int shakeTHRESHOLD = 1500;
   double lastX = 0, lastY = 0, lastZ = 0;
   int lastUpdate = 0;
   detectShake(MotionShakeDetectCallback callback) {
@@ -93,7 +93,7 @@ class MotionShakeDetector {
 
         double speed = (x + y + z - lastX - lastY - lastZ).abs() / diffTime * 10000;
 
-        if (speed > SHAKE_THRESHOLD) {
+        if (speed > shakeTHRESHOLD) {
           callback(true);
         }
         lastX = x;

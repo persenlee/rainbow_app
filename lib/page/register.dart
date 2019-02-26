@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:Rainbow/api/user_api.dart';
 import 'package:Rainbow/api/base_api.dart';
 import 'package:Rainbow/supplemental/validate.dart';
-import 'package:Rainbow/supplemental/user_storage.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -40,112 +39,118 @@ class _RegisterPageState extends State<RegisterPage> {
     return new Scaffold(
       key: _scaffoldState,
       body: SafeArea(
-          child: Stack(
-        children: <Widget>[
-          ListView(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            children: <Widget>[
-              SizedBox(height: 80.0),
-              Column(
+          child: GestureDetector(
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
+              },
+              child: Stack(
                 children: <Widget>[
-                  Image.asset('assets/diamond.png'),
-                  SizedBox(height: 16.0),
-                  Text('Rainbow'),
-                ],
-              ),
-              SizedBox(height: 90.0),
-              TextField(
-                controller: _usernameController,
-                focusNode: _userNameFocusNode,
-                decoration: InputDecoration(
-                    hintText: 'Email',
-                    errorText: _emailErrorText,
-                    filled: true,
-                    labelStyle: TextStyle(
-                      fontSize: 15,
-                    )),
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                onEditingComplete: () {
-                  if (_checkEmail()) {
-                    FocusScope.of(context).requestFocus(_passwordFocusNode);
-                  }
-                },
-              ),
-              SizedBox(height: 18),
-              TextField(
-                controller: _passwordController,
-                focusNode: _passwordFocusNode,
-                obscureText: true,
-                decoration: InputDecoration(
-                    hintText: 'Password',
-                    errorText: _passwordErrorText,
-                    filled: true,
-                    labelStyle: TextStyle(
-                      fontSize: 15,
-                    )),
-                textInputAction: TextInputAction.next,
-                onEditingComplete: (){
-                  if (_checkPassword()) {
-                    FocusScope.of(context).requestFocus(_confirmFocusNode);
-                  }
-                },
-              ),
-              SizedBox(height: 18),
-              TextField(
-                controller: _confirmController,
-                focusNode: _confirmFocusNode,
-                obscureText: true,
-                decoration: InputDecoration(
-                    hintText: 'Confirm Password',
-                    errorText: _confirmErrorText,
-                    filled: true,
-                    labelStyle: TextStyle(
-                      fontSize: 15,
-                    )),
-                onEditingComplete: () {
-                  _checkConfirmPassword();
-                },
-              ),
-              SizedBox(height: 18),
-              Container(
-                height: 46,
-                child: RaisedButton(
-                  key: _registerButtonKey,
-                  child: Text('Sign Up'),
-                  textColor: Colors.white,
-                  color: Colors.lightBlueAccent,
-                  onPressed: () {
-                    _doRegister();
-                  },
-                ),
-              )
-            ],
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              opacity: _loading ? 1 : 0,
-              child: CircularProgressIndicator(),
-              duration: Duration(milliseconds: 100),
-            ),
-          ),
-          new Align(
-                alignment: FractionalOffset.topLeft,
-                child: new Container(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.close,
-                      semanticLabel: 'back',
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  ListView(
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    children: <Widget>[
+                      SizedBox(height: 80.0),
+                      Column(
+                        children: <Widget>[
+                          Image.asset('assets/diamond.png'),
+                          SizedBox(height: 16.0),
+                          Text('Rainbow'),
+                        ],
+                      ),
+                      SizedBox(height: 90.0),
+                      TextField(
+                        controller: _usernameController,
+                        focusNode: _userNameFocusNode,
+                        decoration: InputDecoration(
+                            hintText: 'Email',
+                            errorText: _emailErrorText,
+                            filled: true,
+                            labelStyle: TextStyle(
+                              fontSize: 15,
+                            )),
+                        keyboardType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () {
+                          if (_checkEmail()) {
+                            FocusScope.of(context)
+                                .requestFocus(_passwordFocusNode);
+                          }
+                        },
+                      ),
+                      SizedBox(height: 18),
+                      TextField(
+                        controller: _passwordController,
+                        focusNode: _passwordFocusNode,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            hintText: 'Password',
+                            errorText: _passwordErrorText,
+                            filled: true,
+                            labelStyle: TextStyle(
+                              fontSize: 15,
+                            )),
+                        textInputAction: TextInputAction.next,
+                        onEditingComplete: () {
+                          if (_checkPassword()) {
+                            FocusScope.of(context)
+                                .requestFocus(_confirmFocusNode);
+                          }
+                        },
+                      ),
+                      SizedBox(height: 18),
+                      TextField(
+                        controller: _confirmController,
+                        focusNode: _confirmFocusNode,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            hintText: 'Confirm Password',
+                            errorText: _confirmErrorText,
+                            filled: true,
+                            labelStyle: TextStyle(
+                              fontSize: 15,
+                            )),
+                        onEditingComplete: () {
+                          _checkConfirmPassword();
+                        },
+                      ),
+                      SizedBox(height: 18),
+                      Container(
+                        height: 46,
+                        child: RaisedButton(
+                          key: _registerButtonKey,
+                          child: Text('Sign Up'),
+                          textColor: Colors.white,
+                          color: Colors.lightBlueAccent,
+                          onPressed: () {
+                            _doRegister();
+                          },
+                        ),
+                      )
+                    ],
                   ),
-                ),
-              ),
-        ],
-      )),
+                  Align(
+                    alignment: Alignment.center,
+                    child: AnimatedOpacity(
+                      opacity: _loading ? 1 : 0,
+                      child: CircularProgressIndicator(),
+                      duration: Duration(milliseconds: 100),
+                    ),
+                  ),
+                  new Align(
+                    alignment: FractionalOffset.topLeft,
+                    child: new Container(
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          semanticLabel: 'back',
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ))),
     );
   }
 
@@ -226,7 +231,7 @@ class _RegisterPageState extends State<RegisterPage> {
       } else {
         // UserStorage.getInstance().saveUser(response.result);
         // UserStorage.getInstance().saveLastEmail(_email);
-        Navigator.pop(context,_email);
+        Navigator.pop(context, _email);
       }
     }).catchError((error) {
       print(error);

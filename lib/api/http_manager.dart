@@ -97,4 +97,13 @@ class HttpManager {
       throw e;
     }
   }
+
+  loadResouce(String url) async {
+     try {
+      Response response = await Dio().get(url);
+      return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

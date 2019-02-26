@@ -39,7 +39,6 @@ class _FeedToolBarState extends State<FeedToolBar> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
     feed = widget.feed;
     return ButtonTheme(
       minWidth: 36,
@@ -81,7 +80,6 @@ class _FeedToolBarState extends State<FeedToolBar> {
               } else {
                 Util.share('Share Rainbow Image', feed.src, feed.thumbSrc);
               }
-              
             },
           ),
           PopupMenuButton(

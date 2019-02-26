@@ -28,6 +28,10 @@ class AnimatableList<E> {
     _items.addAll(iterable);
   }
 
+  void clear() {
+    _items.clear();
+  }
+
   bool remove(E item){
     if (item == null) {
       return false;
