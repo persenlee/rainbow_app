@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:Rainbow/supplemental/network_image_cache_manager.dart';
-import 'webview.dart';
-import 'package:Rainbow/api/http_manager.dart';
-import 'package:path/path.dart' as p;
 import 'package:Rainbow/supplemental/util.dart';
 
 class SettingPage extends StatefulWidget {
@@ -100,12 +97,6 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   _about(BuildContext context){
-    HttpManager.sharedInstance().then((manager){
-      String baseUrl =manager.baseUrl;
-      String url =  p.join(baseUrl,' system/about'); 
-      Navigator.of(context).push(new MaterialPageRoute(builder: (_) {
-                  return new WebviewPage(title: 'About Rainbow',url: url);
-                }));
-    }) ;
+    Navigator.of(context).pushNamed('/about');
   }
 }

@@ -1,6 +1,6 @@
 name: Rainbow
 description: Learn the basics of using Material Components by building a simple app with core components.
-
+version: 1.0.0+1
 dependencies:
   flutter:
     sdk: flutter
@@ -21,7 +21,8 @@ dependencies:
   cached_network_image: ^0.6.0+1
   flutter_tags: ^0.1.8
   image_picker_saver: ^0.1.0
-
+  package_info: ^0.4.0+1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -29,6 +30,8 @@ dev_dependencies:
   json_serializable: ^2.0.0
   native_share:
     path: ../../flutter_plugin/native_share
+  store_rate:
+    path: ../../flutter_plugin/store_rate
 
 flutter:
   uses-material-design: true
