@@ -86,6 +86,7 @@ class _AboutPageState extends State<AboutPage> {
                   Text(_version,style: TextStyle(fontWeight: FontWeight.bold),),
                   SizedBox(height: 24,),
                   Text('Copyright © 2019 Rainbow. All rights reserved'),
+                  SizedBox(height: 12,)
                 ],
               )
             ),

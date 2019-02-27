@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'dart:io';
 import 'http_manager.dart';
 
+final String upload_base_url = 'http://pnl34ar1f.bkt.clouddn.com';
+
 enum WrapCode {
   Ok,
   Fail,
@@ -25,7 +27,7 @@ class BaseAPI {
     try {
       var response;
       if (method == HttpMethod.Get) {
-          response = await manager.get(url, params);
+        response = await manager.get(url, params);
       }
       if (method == HttpMethod.Post) {
         response = await manager.post(url, params);
@@ -43,36 +45,36 @@ class BaseAPI {
       WrapResponse wr = WrapResponse();
       wr.response = e.response;
       wr.code = WrapCode.Fail;
-       wr.msg = 'requst error,please try again';
+      wr.msg = 'requst error,please try again';
       return wr;
     } catch (e) {
       throw e;
     }
   }
 
-static uploadFile(File file,ProgressCallback progressCallback) async{
-  HttpManager manager = await HttpManager.sharedInstance();
-  try {
-    var response = await manager.uploadResource(file.path, progressCallback);
-    WrapResponse wr = WrapResponse();
+  static uploadFile(File file, ProgressCallback progressCallback) async {
+    HttpManager manager = await HttpManager.sharedInstance();
+    try {
+      var response = await manager.uploadResource(file.path, progressCallback);
+      WrapResponse wr = WrapResponse();
       wr.response = response;
-      Map result = response.response.data;
+      Map result = response.data;
       String key = result['key'];
-      String hash = result['hash'];
-      String fileUrl = '';
-      wr.result =  fileUrl;
-      wr.code = response.statusCode == HttpStatus.ok ? WrapCode.Ok : WrapCode.Fail;
+      // String hash = result['hash'];
+      String fileUrl = upload_base_url + '/' + key;
+      wr.result = fileUrl;
+      wr.code =
+          response.statusCode == HttpStatus.ok ? WrapCode.Ok : WrapCode.Fail;
       if (wr.code == WrapCode.Fail) {
         wr.msg = 'upload failed';
       }
       return wr;
-  } on DioError catch (e) {
-     WrapResponse wr = WrapResponse();
+    } on DioError catch (e) {
+      WrapResponse wr = WrapResponse();
       wr.response = e.response;
       wr.code = WrapCode.Fail;
-       wr.msg = 'upload failed';
+      wr.msg = 'upload failed';
       return wr;
-  } catch (e) {
+    } catch (e) {}
   }
-}
 }

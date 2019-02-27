@@ -203,7 +203,7 @@ class _ProfileState extends State<ProfilePage> {
   _uploadImage(File file){
     BaseAPI.uploadFile(file, (int uploaded,int total){
 
-    }).then((WrapResponse response){
+    }).then((response){
       if (response.code ==WrapCode.Ok) {
         User temp = User();
         temp.avatar = response.result;
@@ -289,10 +289,12 @@ class _ProfileState extends State<ProfilePage> {
   _modifyProfile(User user, VoidCallback callback) {
     _loading = true;
     UserAPI.editProfile(user).then((response) {
-      setState(() {
+      if (mounted) {
+        setState(() {
         _loading = false;
         callback();
       });
+      }
     });
   }
 }

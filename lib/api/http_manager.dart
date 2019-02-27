@@ -4,9 +4,9 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:Rainbow/supplemental/user_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
-
-typedef ProgressCallback =Function(int received,int total);
+typedef ProgressCallback = Function(int received, int total);
 
 class HttpManager {
   static HttpManager _instance;
@@ -14,6 +14,7 @@ class HttpManager {
   String baseUrl = 'http://192.168.3.5:8000';
   CookieJar cj;
   SharedPreferences prefs;
+  String _uploadToken;
 
   HttpManager() {
     httpClient.options.baseUrl = baseUrl;
@@ -39,7 +40,7 @@ class HttpManager {
     return _instance;
   }
 
-  resetBaseUrl(String baseUrl) async{
+  resetBaseUrl(String baseUrl) async {
     bool result = await prefs.setString('base_url', baseUrl);
     if (result) {
       this.baseUrl = baseUrl;
@@ -113,17 +114,39 @@ class HttpManager {
     }
   }
 
-  uploadResource(String filePath,ProgressCallback progressCallback) async {
+  _getUploadToken() async {
+    try {
+      Response response = await get('/system/upload_token', null);
+      if (response.statusCode == HttpStatus.ok) {
+        return response.data['token'];
+      } else {
+        return null;
+      }
+    } catch (e) {}
+  }
+
+  uploadResource(String filePath, ProgressCallback progressCallback) async {
     try {
       var dio = Dio();
-      dio.options.baseUrl = "https://upload.qiniup.com/";
-      FormData formData = new FormData.from({
-        "action" : "",
-        "upload_token": "",
-        "file": new UploadFileInfo(new File(filePath), "upload")
-      });
-      Response response = await dio.post("/info", data: formData,onUploadProgress:progressCallback);
-      return response;
+      dio.options.baseUrl = "https://upload.qiniup.com";
+      dio.interceptors.add(LogInterceptor(responseBody: true));
+      // var uuid = new Uuid();
+      // var fileName = uuid.v4();
+      if (_uploadToken == null) {
+        _uploadToken = await _getUploadToken();
+      }
+      if (_uploadToken != null) {
+        FormData formData = new FormData.from({
+          // "resource_key" : fileName,
+          "token": _uploadToken,
+          "file": new UploadFileInfo(new File(filePath), "upload")
+        });
+        Response response = await dio.post("",
+            data: formData, onUploadProgress: progressCallback);
+        return response;
+      } else {
+       throw Exception('invlidate upload token');
+      }
     } catch (e) {
       throw e;
     }
