@@ -29,7 +29,7 @@ class FeedToolBar extends StatefulWidget {
 
 class _FeedToolBarState extends State<FeedToolBar> {
   Feed feed;
-  List<Report> reports;
+  ConfigStorage storage;
   @override
   void initState() {
     super.initState();
@@ -100,17 +100,14 @@ class _FeedToolBarState extends State<FeedToolBar> {
   }
 
   _getReports() async {
-    ConfigStorage storage = await ConfigStorage.getInstance();
-    setState(() {
-      reports = storage.reports();
-    });
+    storage = await ConfigStorage.getInstance();
   }
 
   List<PopupMenuEntry<dynamic>> _reportsItemBuilder(BuildContext context) {
-    if (reports == null) {
+    if (storage.reports() == null) {
       return null;
     }
-    return reports.map((Report report) {
+    return storage.reports().map((Report report) {
       return PopupMenuItem(
         value: report.id,
         child: Text(report.reason),

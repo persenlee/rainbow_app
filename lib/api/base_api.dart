@@ -49,4 +49,30 @@ class BaseAPI {
       throw e;
     }
   }
+
+static uploadFile(File file,ProgressCallback progressCallback) async{
+  HttpManager manager = await HttpManager.sharedInstance();
+  try {
+    var response = await manager.uploadResource(file.path, progressCallback);
+    WrapResponse wr = WrapResponse();
+      wr.response = response;
+      Map result = response.response.data;
+      String key = result['key'];
+      String hash = result['hash'];
+      String fileUrl = '';
+      wr.result =  fileUrl;
+      wr.code = response.statusCode == HttpStatus.ok ? WrapCode.Ok : WrapCode.Fail;
+      if (wr.code == WrapCode.Fail) {
+        wr.msg = 'upload failed';
+      }
+      return wr;
+  } on DioError catch (e) {
+     WrapResponse wr = WrapResponse();
+      wr.response = e.response;
+      wr.code = WrapCode.Fail;
+       wr.msg = 'upload failed';
+      return wr;
+  } catch (e) {
+  }
+}
 }

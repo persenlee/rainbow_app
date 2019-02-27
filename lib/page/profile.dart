@@ -8,6 +8,7 @@ import 'dart:io';
 import 'package:Rainbow/api/user_api.dart';
 import 'package:Rainbow/view/gender_dialog.dart';
 import 'package:Rainbow/supplemental/util.dart';
+import 'package:Rainbow/api/base_api.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -191,9 +192,25 @@ class _ProfileState extends State<ProfilePage> {
             maxHeight: 256,
             circleShape: true)
         .then((croppedImageFile) {
+
       setState(() {
         _localAvatar = FileImage(croppedImageFile);
       });
+      _uploadImage(croppedImageFile);
+    });
+  }
+
+  _uploadImage(File file){
+    BaseAPI.uploadFile(file, (int uploaded,int total){
+
+    }).then((WrapResponse response){
+      if (response.code ==WrapCode.Ok) {
+        User temp = User();
+        temp.avatar = response.result;
+        _modifyProfile(temp, (){
+
+        });
+      }
     });
   }
 

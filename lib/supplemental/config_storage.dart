@@ -48,25 +48,29 @@ class ConfigStorage{
     SystemAPI.config().then((response){
       if (response.code == WrapCode.Ok && response.result != null) {
         saveConfig(response.result);
-      }
+      } 
     });
   }
 
   tagNameById(int id){
-    for (Tag tag in _tags){
+    if (_tags != null ) {
+      for (Tag tag in _tags){
       if(tag.id == id){
         return tag.name;
       }
+    }
     }
     return null;
   }
 
   reportReasonById(int id){
-    for (Report report in _reports){
+    if (_reports !=null) {
+      for (Report report in _reports){
       if(report.id == id){
         return report.reason;
       }
       return null;
+    }
     }
   }
 

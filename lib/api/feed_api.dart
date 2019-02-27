@@ -15,7 +15,7 @@ class FeedAPI extends BaseAPI{
         List<Feed> feedList = new List();
         for (var map in list) {
           String tagStr = map['tags'];
-          if (tagStr == '') {
+          if (tagStr ==null || tagStr.trim().length == 0) {
             map['tags'] = null;
           } else {
             List tags = List();
@@ -34,7 +34,7 @@ class FeedAPI extends BaseAPI{
       }
       return response;
     } catch (e) {
-      print(e.messge);
+      throw e;
     }
   }
 

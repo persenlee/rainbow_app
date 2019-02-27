@@ -5,6 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:Rainbow/supplemental/user_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+typedef ProgressCallback =Function(int received,int total);
+
 class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
@@ -26,9 +29,9 @@ class HttpManager {
       _instance = HttpManager();
       _instance.prefs = await SharedPreferences.getInstance();
       String storedBaseUrl = _instance.prefs.getString('base_url');
-      if (storedBaseUrl !=null) {
-        _instance.baseUrl =storedBaseUrl;
-        _instance.httpClient.options.baseUrl =storedBaseUrl;
+      if (storedBaseUrl != null) {
+        _instance.baseUrl = storedBaseUrl;
+        _instance.httpClient.options.baseUrl = storedBaseUrl;
       }
       await _instance._addCookieManager();
       _instance._listenSessionExpire();
@@ -36,10 +39,13 @@ class HttpManager {
     return _instance;
   }
 
-  resetBaseUrl(String baseUrl){
-    this.baseUrl =baseUrl;
-    httpClient.options.baseUrl =baseUrl;
-    prefs.setString('base_url', baseUrl);
+  resetBaseUrl(String baseUrl) async{
+    bool result = await prefs.setString('base_url', baseUrl);
+    if (result) {
+      this.baseUrl = baseUrl;
+      httpClient.options.baseUrl = baseUrl;
+    }
+    return result;
   }
 
   _addCookieManager() async {
@@ -98,10 +104,26 @@ class HttpManager {
     }
   }
 
-  loadResouce(String url) async {
-     try {
+  loadResource(String url) async {
+    try {
       Response response = await Dio().get(url);
       return response.data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  uploadResource(String filePath,ProgressCallback progressCallback) async {
+    try {
+      var dio = Dio();
+      dio.options.baseUrl = "https://upload.qiniup.com/";
+      FormData formData = new FormData.from({
+        "action" : "",
+        "upload_token": "",
+        "file": new UploadFileInfo(new File(filePath), "upload")
+      });
+      Response response = await dio.post("/info", data: formData,onUploadProgress:progressCallback);
+      return response;
     } catch (e) {
       throw e;
     }

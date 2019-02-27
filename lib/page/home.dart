@@ -22,6 +22,7 @@ import 'home_drawer.dart';
 import 'package:Rainbow/supplemental/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Rainbow/api/http_manager.dart';
+import 'package:Rainbow/supplemental/config_storage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -40,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _loadConfig();
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
     _fetchData();
@@ -179,6 +181,11 @@ class _HomePageState extends State<HomePage> {
     Action.like(context, feed, () {
       setState(() {});
     }, () {});
+  }
+
+  _loadConfig() async{
+    ConfigStorage storage = await ConfigStorage.getInstance();
+    storage.loadFromNetwork();
   }
 
   CupertinoActionSheet _sheet;
