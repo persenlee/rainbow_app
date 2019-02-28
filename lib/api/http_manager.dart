@@ -5,17 +5,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:Rainbow/supplemental/user_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:Rainbow/supplemental/util.dart';
 
 typedef ProgressCallback = Function(int received, int total);
 
 class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
-  String baseUrl = 'http://192.168.3.5:8000';
+  String baseUrl = Util.baseUrlForMode(BaseUrlMode.Local_Company);
   CookieJar cj;
   SharedPreferences prefs;
   String _uploadToken;
 
+  
   HttpManager() {
     httpClient.options.baseUrl = baseUrl;
     httpClient.options.contentType =

@@ -3,6 +3,7 @@ import 'package:Rainbow/model/feed.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:Rainbow/supplemental/network_image_cache_manager.dart';
 import 'feed_toolbar.dart';
+import 'package:Rainbow/supplemental/window_adapt.dart';
 
 typedef FeedCardImageTapCallBack = void Function();
 
@@ -24,8 +25,7 @@ class FeedCard extends StatefulWidget {
       this.imageTapCallBack,
       this.likeCallBack,
       this.reportCallBack,
-      this.shareCallBack
-      })
+      this.shareCallBack})
       : super(key: key);
   @override
   State<StatefulWidget> createState() {
@@ -83,7 +83,8 @@ class _FeedCardState extends State<FeedCard> {
           Flexible(
             fit: FlexFit.loose,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 8.0),
+              padding: EdgeInsets.fromLTRB(WindowAdapt.px(12),
+                  WindowAdapt.px(12), WindowAdapt.px(12), WindowAdapt.px(8)),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +95,7 @@ class _FeedCardState extends State<FeedCard> {
                     maxLines: 1,
                   ),
                   SizedBox(
-                    height: 8.0,
+                    height: WindowAdapt.px(8),
                   ),
                   FeedToolBar(
                     feed: feed,

@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisCount: 2,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
-            childAspectRatio: 8.0 / 9.5),
+            childAspectRatio: 8.0 / 9.3),
       );
     }
   }

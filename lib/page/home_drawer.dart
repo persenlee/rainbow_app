@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:Rainbow/model/user.dart';
 import 'package:Rainbow/supplemental/user_storage.dart';
+import 'package:Rainbow/supplemental/window_adapt.dart';
 
 class HomeDrawerPage extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _HomePageDrawerState extends State<HomeDrawerPage> {
             child: ListView(
               children: <Widget>[
                 SizedBox(
-                  height: 24,
+                  height: WindowAdapt.px(24),
                 ),
                 UserAccountsDrawerHeader(  
                   accountName: Text(
@@ -93,7 +94,7 @@ class _HomePageDrawerState extends State<HomeDrawerPage> {
                   },
                 ),
                 SizedBox(
-                  height: 64,
+                  height: WindowAdapt.px(24),
                 ),
                 Container(
                   width: 46,

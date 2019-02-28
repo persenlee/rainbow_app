@@ -37,10 +37,15 @@ class _FeedToolBarState extends State<FeedToolBar> {
     _getReports();
   }
 
+
   @override
   Widget build(BuildContext context) {
     feed = widget.feed;
-    return ButtonTheme(
+    return 
+    FittedBox(
+      fit: BoxFit.contain,
+      child: 
+    ButtonTheme(
       minWidth: 36,
       buttonColor: widget.color,
       padding: EdgeInsets.zero,
@@ -96,7 +101,7 @@ class _FeedToolBarState extends State<FeedToolBar> {
           ),
         ],
       ),
-    );
+    ));
   }
 
   _getReports() async {
