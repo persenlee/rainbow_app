@@ -24,13 +24,24 @@ class Util {
       case BaseUrlMode.Develop:
         break;
       case BaseUrlMode.Test:
-        baseUrl = 'http://test.rainbowplanet.club';
+        baseUrl = 'https://test.rainbowplanet.club';
         break;
       case BaseUrlMode.Release:
         break;
       default:
     }
     return baseUrl;
+  }
+
+  static String sslPemForMode(BaseUrlMode mode){
+    String pemStr ;
+    switch (mode) {
+      case BaseUrlMode.Test:
+        pemStr = "";
+        break;
+      default:
+    }
+    return pemStr;
   }
 
   static String genderConvert(int gender) {

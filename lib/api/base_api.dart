@@ -35,7 +35,7 @@ class BaseAPI {
       WrapResponse wr = WrapResponse();
       wr.response = response;
       wr.code =
-          response.statusCode == HttpStatus.ok ? WrapCode.Ok : WrapCode.Fail;
+          response.statusCode == 200 ? WrapCode.Ok : WrapCode.Fail;
 
       if (wr.code == WrapCode.Fail) {
         wr.msg = 'requst error,please try again';
@@ -64,7 +64,7 @@ class BaseAPI {
       String fileUrl = upload_base_url + '/' + key;
       wr.result = fileUrl;
       wr.code =
-          response.statusCode == HttpStatus.ok ? WrapCode.Ok : WrapCode.Fail;
+          response.statusCode == 200 ? WrapCode.Ok : WrapCode.Fail;
       if (wr.code == WrapCode.Fail) {
         wr.msg = 'upload failed';
       }

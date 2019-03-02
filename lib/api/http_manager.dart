@@ -6,8 +6,9 @@ import 'package:Rainbow/supplemental/user_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:Rainbow/supplemental/util.dart';
+import 'package:flutter/services.dart';
 
-typedef ProgressCallback = Function(int received, int total);
+typedef PLProgressCallback = Function(int received, int total);
 
 class HttpManager {
   static HttpManager _instance;
@@ -24,12 +25,27 @@ class HttpManager {
         ContentType.parse("application/x-www-form-urlencoded");
     httpClient.options.connectTimeout = 3000; //5s
     httpClient.options.receiveTimeout = 3000;
-    httpClient.interceptors.add(LogInterceptor(responseBody: true));
+    httpClient.interceptors.add(LogInterceptor(responseBody: true)); 
   }
 
   static sharedInstance() async {
     if (_instance == null) {
       _instance = HttpManager();
+      String pemStr = await rootBundle.loadString('assets/server.pem');
+      (_instance.httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
+        client.badCertificateCallback=(X509Certificate cert, String host, int port){
+          if(cert.pem==pemStr){ // Verify the certificate
+              return true; 
+          }
+          return false;
+        };
+      };
+      // (_instance.httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
+      //   SecurityContext sc = new SecurityContext();
+      //   sc.setTrustedCertificates(certPath);
+      //   HttpClient httpClient = new HttpClient(context: sc);
+      //   return httpClient;
+      // };
       _instance.prefs = await SharedPreferences.getInstance();
       String storedBaseUrl = _instance.prefs.getString('base_url');
       if (storedBaseUrl != null) {
@@ -54,7 +70,7 @@ class HttpManager {
   _addCookieManager() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String appDocPath = appDocDir.path;
-    cj = new PersistCookieJar(appDocPath);
+    cj = new PersistCookieJar(dir:appDocPath);
     httpClient.interceptors.add(CookieManager(cj));
     return true;
   }
@@ -119,7 +135,7 @@ class HttpManager {
   _getUploadToken() async {
     try {
       Response response = await get('/system/upload_token', null);
-      if (response.statusCode == HttpStatus.ok) {
+      if (response.statusCode == 200) {
         return response.data['token'];
       } else {
         return null;
@@ -144,7 +160,7 @@ class HttpManager {
           "file": new UploadFileInfo(new File(filePath), "upload")
         });
         Response response = await dio.post("",
-            data: formData, onUploadProgress: progressCallback);
+            data: formData, onSendProgress: progressCallback);
         return response;
       } else {
        throw Exception('invlidate upload token');
