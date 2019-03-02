@@ -4,7 +4,7 @@ import 'package:native_share/native_share.dart';
 
 enum BuildMode { release, profile, debug }
 
-enum BaseUrlMode {Local_Home,Local_Company,Develop,Release}
+enum BaseUrlMode {Local_Home,Local_Company,Develop,Test,Release}
 
 typedef MotionShakeDetectCallback = void Function(bool);
 
@@ -22,6 +22,9 @@ class Util {
         baseUrl = 'http://192.168.0.200:8000';
         break;
       case BaseUrlMode.Develop:
+        break;
+      case BaseUrlMode.Test:
+        baseUrl = 'http://test.rainbowplanet.club';
         break;
       case BaseUrlMode.Release:
         break;

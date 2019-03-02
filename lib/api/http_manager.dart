@@ -12,7 +12,7 @@ typedef ProgressCallback = Function(int received, int total);
 class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
-  String baseUrl = Util.baseUrlForMode(BaseUrlMode.Local_Company);
+  String baseUrl = Util.baseUrlForMode(BaseUrlMode.Test);
   CookieJar cj;
   SharedPreferences prefs;
   String _uploadToken;
