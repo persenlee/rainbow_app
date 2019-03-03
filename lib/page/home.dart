@@ -203,14 +203,19 @@ class _HomePageState extends State<HomePage> {
           ),
           actions: <Widget>[
             CupertinoActionSheetAction(
-                child: Text('Company [http://192.168.0.200:8000]'),
+                child: Text('Company[Local]'),
                 onPressed: () {
                   Navigator.pop(context, BaseUrlMode.Local_Company);
                 }),
             CupertinoActionSheetAction(
-                child: Text('Home [http://192.168.3.5:8000]'),
+                child: Text('Home[Local]'),
                 onPressed: () {
                   Navigator.pop(context, BaseUrlMode.Local_Home);
+                }),
+            CupertinoActionSheetAction(
+                child: Text('Test[Remote]'),
+                onPressed: () {
+                  Navigator.pop(context, BaseUrlMode.Test);
                 }),
           ]);
     }
@@ -226,10 +231,8 @@ class _HomePageState extends State<HomePage> {
                   builder: (BuildContext context) => getSheet(context))
               .then((value) {
             if (value != null) {
-              String baseUrl;
-              baseUrl = Util.baseUrlForMode(value);
               HttpManager.sharedInstance().then((manager) {
-                manager.resetBaseUrl(baseUrl);
+                manager.resetUrlMode(value);
               });
             }
             _sheet = null;

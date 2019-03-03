@@ -33,6 +33,18 @@ class Util {
     return baseUrl;
   }
 
+  static BaseUrlMode urlModeFromString(String modeStr)
+  {
+    BaseUrlMode  realMode;
+    for (BaseUrlMode mode in BaseUrlMode.values) {
+      if (mode.toString() ==modeStr) {
+        realMode =mode;
+        break;
+      }
+    }
+    return realMode;
+  }
+
   static String sslPemForMode(BaseUrlMode mode){
     String pemStr ;
     switch (mode) {

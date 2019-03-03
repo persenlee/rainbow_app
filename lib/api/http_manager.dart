@@ -31,26 +31,18 @@ class HttpManager {
   static sharedInstance() async {
     if (_instance == null) {
       _instance = HttpManager();
-      String pemStr = await rootBundle.loadString('assets/server.pem');
-      (_instance.httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
-        client.badCertificateCallback=(X509Certificate cert, String host, int port){
-          if(cert.pem==pemStr){ // Verify the certificate
-              return true; 
-          }
-          return false;
-        };
-      };
-      // (_instance.httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
-      //   SecurityContext sc = new SecurityContext();
-      //   sc.setTrustedCertificates(certPath);
-      //   HttpClient httpClient = new HttpClient(context: sc);
-      //   return httpClient;
-      // };
       _instance.prefs = await SharedPreferences.getInstance();
-      String storedBaseUrl = _instance.prefs.getString('base_url');
-      if (storedBaseUrl != null) {
-        _instance.baseUrl = storedBaseUrl;
-        _instance.httpClient.options.baseUrl = storedBaseUrl;
+      String urlMode = _instance.prefs.getString('default_url_mode');
+      if (urlMode == null) {
+        urlMode =BaseUrlMode.Release.toString();
+      }
+      BaseUrlMode mode = Util.urlModeFromString(urlMode);
+      String storedBaseUrl = Util.baseUrlForMode(mode);
+      _instance.baseUrl = storedBaseUrl;
+      _instance.httpClient.options.baseUrl = storedBaseUrl;
+      if (mode ==BaseUrlMode.Test ||
+          mode ==BaseUrlMode.Release) {
+        await _instance._addSSLCertVerify();
       }
       await _instance._addCookieManager();
       _instance._listenSessionExpire();
@@ -58,11 +50,36 @@ class HttpManager {
     return _instance;
   }
 
-  resetBaseUrl(String baseUrl) async {
-    bool result = await prefs.setString('base_url', baseUrl);
+  _addSSLCertVerify() async{
+    String pemStr = await rootBundle.loadString('assets/server.pem');
+      (httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
+        client.badCertificateCallback=(X509Certificate cert, String host, int port){
+          if(cert.pem==pemStr){ // Verify the certificate
+              return true; 
+          }
+          return false;
+        };
+      };
+  }
+
+
+  _removeSSLCertVerify() {
+    (httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =null;
+  }
+
+
+  resetUrlMode(BaseUrlMode mode) async{
+    String baseUrl = Util.baseUrlForMode(mode);
+    bool result = await prefs.setString('default_url_mode', mode.toString());
     if (result) {
-      this.baseUrl = baseUrl;
+      this.baseUrl =baseUrl;
       httpClient.options.baseUrl = baseUrl;
+      if (mode ==BaseUrlMode.Test ||
+          mode ==BaseUrlMode.Release) {
+        await _addSSLCertVerify();
+      } else {
+        _removeSSLCertVerify();
+      }
     }
     return result;
   }
