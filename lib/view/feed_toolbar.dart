@@ -112,11 +112,11 @@ class _FeedToolBarState extends State<FeedToolBar> {
     if (storage.reports() == null) {
       return null;
     }
-    return storage.reports().map((Report report) {
+    return  List<PopupMenuEntry<dynamic>>.from(storage.reports().map((Report report) {
       return PopupMenuItem(
         value: report.id,
         child: Text(report.reason),
       );
-    }).toList();
+    }).toList());
   }
 }
