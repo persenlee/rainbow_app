@@ -65,6 +65,9 @@ class UserAPI extends BaseAPI{
       if(user.gender != null)
         params['gender'] = user.gender;
       var response = await BaseAPI.requestUrl(url, HttpMethod.Post, params);
+      if (response.code == WrapCode.Fail) {
+        response.msg = 'modified profile failed';
+      }
       return response;
     } catch (e) {
     }

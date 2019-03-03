@@ -10,6 +10,8 @@ import 'package:Rainbow/view/gender_dialog.dart';
 import 'package:Rainbow/supplemental/util.dart';
 import 'package:Rainbow/api/base_api.dart';
 
+typedef ResultCallBack = Function(bool success);
+
 class ProfilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,6 +20,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfileState extends State<ProfilePage> {
+  final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey();
+  final FocusNode _nameFocusNode =FocusNode();
   TextEditingController _nameController = TextEditingController();
   User user;
   FileImage _localAvatar;
@@ -32,6 +36,7 @@ class _ProfileState extends State<ProfilePage> {
     UserStorage.getInstance().readUser().then((user) {
       setState(() {
         this.user = user;
+        _nameController =TextEditingController(text:user.name);
       });
     });
     super.initState();
@@ -40,6 +45,7 @@ class _ProfileState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldState,
       appBar: AppBar(
         title: Text('Profile'),
         // actions: <Widget>[
@@ -89,12 +95,11 @@ class _ProfileState extends State<ProfilePage> {
                 title: Text('Name'),
                 trailing: _edit
                     ? Container(
-                        width: 320,
-                        alignment: Alignment.centerRight,
+                        width: 260,
                         child: TextField(
+                          focusNode:_nameFocusNode,
                           decoration: InputDecoration(
                               filled: true, hintText: 'user name'),
-                          obscureText: true,
                           enabled: !_loading,
                           controller: _nameController,
                           onEditingComplete: () {
@@ -109,6 +114,7 @@ class _ProfileState extends State<ProfilePage> {
                 onTap: () {
                   setState(() {
                     _edit = true;
+                    FocusScope.of(context).requestFocus(_nameFocusNode);
                   });
                 },
               ),
@@ -207,8 +213,11 @@ class _ProfileState extends State<ProfilePage> {
       if (response.code ==WrapCode.Ok) {
         User temp = User();
         temp.avatar = response.result;
-        _modifyProfile(temp, (){
-
+        _modifyProfile(temp, (bool success){
+          _localAvatar =null;
+          if (success) {
+            user.avatar =response.result;
+          } 
         });
       }
     });
@@ -219,8 +228,10 @@ class _ProfileState extends State<ProfilePage> {
     && _nameController.text.trim().length != 0) {
       User temp = User();
       temp.name = _nameController.text;
-      _modifyProfile(temp, () {
-        user.name = _nameController.text;
+      _modifyProfile(temp, (bool success) {
+        if (success) {
+          user.name = _nameController.text;
+        } 
       });
     }
   }
@@ -242,9 +253,13 @@ class _ProfileState extends State<ProfilePage> {
       if (result != null) {
         User temp = User();
         temp.gender = result;
-        _modifyProfile(temp, () {
-          user.gender = _selectedAge;
-          _selectedAge = null;
+        _modifyProfile(temp, (bool success) {
+          if (success) {
+            user.gender = _selectedAge;
+            _selectedAge = null;
+          } else {
+            _selectedAge = null;
+          }
         });
       }
     });
@@ -279,20 +294,35 @@ class _ProfileState extends State<ProfilePage> {
         }).then((result) {
       User temp = User();
       temp.age = _selectedAge;
-      _modifyProfile(temp, () {
-        user.age = _selectedAge;
-        _selectedAge = null;
+      _modifyProfile(temp, (bool success) {
+        if (success) {
+          user.age = _selectedAge;
+          _selectedAge = null;
+        } else {
+          _selectedAge = null;
+        }
+        
       });
     });
   }
 
-  _modifyProfile(User user, VoidCallback callback) {
-    _loading = true;
+  _modifyProfile(User user, ResultCallBack callback) {
+    setState(() {
+      _loading = true;
+    });
     UserAPI.editProfile(user).then((response) {
+      if (response.code !=WrapCode.Ok) {
+           final SnackBar snackbar = SnackBar(
+          content: Text(response.msg),
+          duration: Duration(seconds: 3),
+          backgroundColor: Colors.redAccent,
+        );
+        _scaffoldState.currentState.showSnackBar(snackbar);
+      }
       if (mounted) {
         setState(() {
         _loading = false;
-        callback();
+        callback(response.code ==WrapCode.Ok);
       });
       }
     });
