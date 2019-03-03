@@ -73,7 +73,7 @@ class _ProfileState extends State<ProfilePage> {
                   trailing: Text(user == null ? '' : user.email),
                 ),
               ),
-              Divider(),
+              Divider(height: 1,),
               ListTile(
                 title: Text('Avatar'),
                 trailing: CircleAvatar(

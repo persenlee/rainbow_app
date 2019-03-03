@@ -161,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                   index: pos,
                   refPageTag: pageTag,
                 );
-              }));
+              },fullscreenDialog: false));
             },
             likeCallBack: (feed) {
               like(feed);
