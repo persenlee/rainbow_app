@@ -109,7 +109,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               fontSize: 15,
                             )),
                         onEditingComplete: () {
-                          _checkConfirmPassword();
+                          if(_checkConfirmPassword()){
+                            _doRegister();
+                          }
                         },
                       ),
                       SizedBox(height: 18),

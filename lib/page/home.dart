@@ -77,6 +77,9 @@ class _HomePageState extends State<HomePage> {
 
   Future<Null> _handlePaginator() async{
     //prefresh or paginator
+    if (_isLoading) {
+      return null;
+    }
     _isLoading = true;
     _page =_bottomRefresh ? _page : 1;
     var response = await FeedAPI.getFeeds(_page, 10);
