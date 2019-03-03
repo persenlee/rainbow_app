@@ -269,6 +269,7 @@ class _ProfileState extends State<ProfilePage> {
     showCupertinoModalPopup(
         context: context,
         builder: (BuildContext context) {
+          final ThemeData theme = Theme.of(context);
           return Container(
               height: 216,
               child: CupertinoPicker(
@@ -286,7 +287,8 @@ class _ProfileState extends State<ProfilePage> {
                   return Center(
                     child: Text(
                       index.toString(),
-                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      //user theme resolve yellow underline in text
+                      style: theme.textTheme.title
                     ),
                   );
                 }),
