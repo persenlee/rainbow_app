@@ -21,7 +21,7 @@ import 'package:Rainbow/page/setting.dart';
 import 'package:Rainbow/page/favorite.dart';
 import 'package:Rainbow/page/about.dart';
 
-class ShrineApp extends StatelessWidget {
+class RainbowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

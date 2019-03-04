@@ -135,13 +135,20 @@ _scrollListener() {
       : 
        Center(
          child:
-        FlatButton(
+         Column(
+           mainAxisAlignment: MainAxisAlignment.center,
+           children: <Widget>[
+            Text('No Favorite Data Yet'),
+            SizedBox(height: 12,),
+            FlatButton(
           color: Colors.blueAccent,
           textColor: Colors.white,
           child: Text('Retry'),
           onPressed: (){
             _fetchData();
-          },)
+          }
+         )
+         ],)
         );
     } else {
       return  AnimatedList(

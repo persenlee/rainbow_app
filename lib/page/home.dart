@@ -23,6 +23,7 @@ import 'package:Rainbow/supplemental/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:Rainbow/api/http_manager.dart';
 import 'package:Rainbow/supplemental/config_storage.dart';
+import 'package:Rainbow/supplemental/user_storage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -136,15 +137,22 @@ class _HomePageState extends State<HomePage> {
       Center(child: CircularProgressIndicator()) 
       : 
        Center(
-         child:
-        FlatButton(
-          color: Colors.blueAccent,
-          textColor: Colors.white,
-          child: Text('Retry'),
-          onPressed: (){
-            _fetchData();
-          },)
-        );
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('No Feed Data Yet'),
+                SizedBox(
+                  height: 12,
+                ),
+                FlatButton(
+                    color: Colors.blueAccent,
+                    textColor: Colors.white,
+                    child: Text('Retry'),
+                    onPressed: () {
+                      _fetchData();
+                    })
+              ],
+            ));
     } else {
       return GridView.builder(
         padding: EdgeInsets.all(16.0),
@@ -234,6 +242,8 @@ class _HomePageState extends State<HomePage> {
                   builder: (BuildContext context) => getSheet(context))
               .then((value) {
             if (value != null) {
+
+              UserStorage.getInstance().deleteUser();
               HttpManager.sharedInstance().then((manager) {
                 manager.resetUrlMode(value);
               });
