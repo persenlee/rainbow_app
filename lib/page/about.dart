@@ -13,10 +13,10 @@ class AboutPage extends StatefulWidget {
 class _AboutPageState extends State<AboutPage> {
   final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey();
   final String _des = 'A better gallery';
-  final String twitterAccount = 'Rainbow';
-  final String weiboAccount = 'Rainbow';
+  final String twitterAccount = '@Rainbow59956116';
+  final String weiboAccount = 'Rainbow-Official';
   final String wechatAccount = 'Rainbow';
-  final String emailAccount = 'rainbow@gmail.com';
+  final String emailAccount = 'rainbowplanet@163.com';
    String _version = '';
   @override
   void initState() {
