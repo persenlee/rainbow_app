@@ -1,6 +1,8 @@
 import 'dart:core';
 import 'package:sensors/sensors.dart';
 import 'package:native_share/native_share.dart';
+import 'package:Rainbow/api/http_manager.dart';
+import 'package:path/path.dart' as p;
 
 enum BuildMode { release, profile, debug }
 
@@ -44,6 +46,11 @@ class Util {
       }
     }
     return realMode;
+  }
+
+  static Future<String> absoluteUrlForPath(String path) async{
+    HttpManager manager = await HttpManager.sharedInstance();
+    return p.join(manager.baseUrl,path);
   }
 
   static String sslPemForMode(BaseUrlMode mode){

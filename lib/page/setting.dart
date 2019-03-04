@@ -92,8 +92,9 @@ class _SettingPageState extends State<SettingPage> {
     });
   }
 
-  _share(){
-    Util.share('Share Rainbow To Friends', 'http://www.github.com', null);
+  _share() async{
+    String url = await Util.absoluteUrlForPath('system/landing');
+    Util.share('Share Rainbow To Friends', url, null);
   }
 
   _about(BuildContext context){
