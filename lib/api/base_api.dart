@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'dart:io';
 import 'http_manager.dart';
+import 'package:Rainbow/supplemental/user_storage.dart';
 
 final String upload_base_url = 'http://pnl34ar1f.bkt.clouddn.com';
 
@@ -36,7 +37,11 @@ class BaseAPI {
       wr.response = response;
       wr.code =
           response.statusCode == 200 ? WrapCode.Ok : WrapCode.Fail;
-
+      if (response.statusCode == 401) {
+        //cookie expired
+        manager.deleteCookie();
+        UserStorage.getInstance().deleteUser();
+      }
       if (wr.code == WrapCode.Fail) {
         wr.msg = 'requst error,please try again';
       }

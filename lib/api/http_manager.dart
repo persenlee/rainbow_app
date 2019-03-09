@@ -14,7 +14,7 @@ class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
   String baseUrl = Util.baseUrlForMode(BaseUrlMode.Test);
-  CookieJar cj;
+  PersistCookieJar cj;
   SharedPreferences prefs;
   String _uploadToken;
 
@@ -23,8 +23,8 @@ class HttpManager {
     httpClient.options.baseUrl = baseUrl;
     httpClient.options.contentType =
         ContentType.parse("application/x-www-form-urlencoded");
-    httpClient.options.connectTimeout = 3000; //5s
-    httpClient.options.receiveTimeout = 3000;
+    httpClient.options.connectTimeout = 5000; //5s
+    httpClient.options.receiveTimeout = 5000;
     httpClient.interceptors.add(LogInterceptor(responseBody: true)); 
   }
 
@@ -51,7 +51,7 @@ class HttpManager {
   }
 
   _addSSLCertVerify() async{
-    String pemStr = await rootBundle.loadString('assets/server.pem');
+    final String pemStr = await rootBundle.loadString('assets/server.pem');
       (httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
         client.badCertificateCallback=(X509Certificate cert, String host, int port){
           if(cert.pem==pemStr){ // Verify the certificate
@@ -82,6 +82,10 @@ class HttpManager {
       }
     }
     return result;
+  }
+
+  deleteCookie() {
+    cj.deleteAll();
   }
 
   _addCookieManager() async {

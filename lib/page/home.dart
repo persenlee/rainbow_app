@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadConfig();
+    _loadProfile();
     _scrollController = new ScrollController();
     _scrollController.addListener(_scrollListener);
     _fetchData();
@@ -197,6 +198,11 @@ class _HomePageState extends State<HomePage> {
   _loadConfig() async{
     ConfigStorage storage = await ConfigStorage.getInstance();
     storage.loadFromNetwork();
+  }
+
+  _loadProfile() async {
+    UserStorage storage =UserStorage.getInstance();
+    storage.syncUserProfile();
   }
 
   CupertinoActionSheet _sheet;

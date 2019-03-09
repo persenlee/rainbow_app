@@ -1,6 +1,8 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:Rainbow/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:Rainbow/api/user_api.dart';
+import 'package:Rainbow/api/base_api.dart';
 
 class UserStorage {
   // static final UserStorage instance = new UserStorage._internal();
@@ -13,7 +15,7 @@ class UserStorage {
 
   // UserStorage._internal();
 
-  static getInstance() {
+  static  UserStorage getInstance() {
     return instance;
   }
 
@@ -64,5 +66,16 @@ class UserStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String email = prefs.getString('last_email');
     return email;
+  }
+
+  Future<User> syncUserProfile() async {
+    User user = await readUser();
+    if (user !=null) {
+      WrapResponse response =await UserAPI.profile();
+      if (response.result != null) {
+        saveUser(response.result);
+      }
+    }
+    return user;
   }
 }

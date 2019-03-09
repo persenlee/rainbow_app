@@ -43,7 +43,7 @@ class UserAPI extends BaseAPI{
       if (response.code == WrapCode.Ok) {
         User user = User.fromJson(response.response.data);
         response.result = user;
-      }
+      } 
       return response;
     } catch (e) {
     }

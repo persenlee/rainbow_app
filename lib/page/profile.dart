@@ -33,7 +33,7 @@ class _ProfileState extends State<ProfilePage> {
   @override
   void initState() {
     _edit = false;
-    UserStorage.getInstance().readUser().then((user) {
+    UserStorage.getInstance().syncUserProfile().then((User user){
       setState(() {
         this.user = user;
         _nameController =TextEditingController(text:user.name);
@@ -48,19 +48,6 @@ class _ProfileState extends State<ProfilePage> {
       key: _scaffoldState,
       appBar: AppBar(
         title: Text('Profile'),
-        // actions: <Widget>[
-        //     IconButton(
-        //       icon: Icon(
-        //         Icons.edit,
-        //         semanticLabel: 'edit',
-        //       ),
-        //       onPressed: () {
-        //         setState(() {
-        //           _edit = true;
-        //         });
-        //       },
-        //     ),
-        //   ],
       ),
       body: SafeArea(
         child: Stack(children: <Widget>[

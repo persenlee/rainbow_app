@@ -23,8 +23,8 @@ class _HomePageDrawerState extends State<HomeDrawerPage> {
     return Drawer(
       child: MediaQuery.removePadding(
           context: context,
-          removeTop: true,
-          child: Container(
+          removeTop: false,
+          child:  Container(
             color: backgroundColor,
             child: ListView(
               children: <Widget>[
