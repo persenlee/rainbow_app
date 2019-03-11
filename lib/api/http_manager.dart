@@ -13,7 +13,7 @@ typedef PLProgressCallback = Function(int received, int total);
 class HttpManager {
   static HttpManager _instance;
   final httpClient = new Dio();
-  String baseUrl = Util.baseUrlForMode(BaseUrlMode.Test);
+  String baseUrl = Util.baseUrlForMode(BaseUrlMode.Release);
   PersistCookieJar cj;
   SharedPreferences prefs;
   String _uploadToken;
@@ -31,17 +31,21 @@ class HttpManager {
   static sharedInstance() async {
     if (_instance == null) {
       _instance = HttpManager();
-      _instance.prefs = await SharedPreferences.getInstance();
-      String urlMode = _instance.prefs.getString('default_url_mode');
-      if (urlMode == null) {
-        urlMode =BaseUrlMode.Release.toString();
-      }
-      BaseUrlMode mode = Util.urlModeFromString(urlMode);
-      String storedBaseUrl = Util.baseUrlForMode(mode);
-      _instance.baseUrl = storedBaseUrl;
-      _instance.httpClient.options.baseUrl = storedBaseUrl;
-      if (mode ==BaseUrlMode.Test ||
-          mode ==BaseUrlMode.Release) {
+      if (Util.buildMode() == BuildMode.debug) {
+        _instance.prefs = await SharedPreferences.getInstance();
+        String urlMode = _instance.prefs.getString('default_url_mode');
+        if (urlMode == null) {
+          urlMode =BaseUrlMode.Release.toString();
+        }
+        BaseUrlMode mode = Util.urlModeFromString(urlMode);
+        String storedBaseUrl = Util.baseUrlForMode(mode);
+        _instance.baseUrl = storedBaseUrl;
+        _instance.httpClient.options.baseUrl = storedBaseUrl;
+        if (mode ==BaseUrlMode.Test ||
+            mode ==BaseUrlMode.Release) {
+          await _instance._addSSLCertVerify();
+        }
+      } else {
         await _instance._addSSLCertVerify();
       }
       await _instance._addCookieManager();
