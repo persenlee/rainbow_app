@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
     _baseUrlChange(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text('Rainbow'),
+          title: Text('Bearhub'),
           actions: <Widget>[
             // IconButton(
             //   icon: Icon(

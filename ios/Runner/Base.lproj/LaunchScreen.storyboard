@@ -27,20 +27,20 @@
                                 <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="6mr-Kd-ToL">
-                                <rect key="frame" x="152" y="293" width="71.5" height="81.5"/>
+                            <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" distribution="equalSpacing" alignment="center" spacing="18" translatesAutoresizingMaskIntoConstraints="NO" id="6mr-Kd-ToL">
+                                <rect key="frame" x="51.5" y="158.5" width="272" height="350"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_60pt" translatesAutoresizingMaskIntoConstraints="NO" id="P4L-Dt-L8d">
-                                        <rect key="frame" x="5.5" y="0.0" width="60" height="60"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bear" translatesAutoresizingMaskIntoConstraints="NO" id="P4L-Dt-L8d">
+                                        <rect key="frame" x="0.0" y="0.0" width="272" height="296"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="60" id="jDq-eN-vl1"/>
-                                            <constraint firstAttribute="width" constant="60" id="yZV-tZ-7Bl"/>
+                                            <constraint firstAttribute="height" constant="296" id="Gdv-Gf-Fmb"/>
+                                            <constraint firstAttribute="width" constant="272" id="yZV-tZ-7Bl"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bearhub" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kNq-jV-HRV">
-                                        <rect key="frame" x="0.0" y="60" width="71.5" height="21.5"/>
-                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
-                                        <color key="textColor" red="0.1764705882352941" green="0.15686274509803921" blue="0.3529411764705882" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <rect key="frame" x="78.5" y="314" width="115.5" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="30"/>
+                                        <color key="textColor" red="0.18431372549019609" green="0.3529411764705882" blue="0.49803921568627452" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -61,6 +61,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="icon_60pt" width="60" height="60"/>
+        <image name="bear" width="272" height="296"/>
     </resources>
 </document>

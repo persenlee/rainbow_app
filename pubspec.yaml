@@ -35,6 +35,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/diamond.png
+    - assets/bear.png
     - assets/default-avatar.png
     - assets/server.pem

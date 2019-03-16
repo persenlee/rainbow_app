@@ -12,11 +12,11 @@ class AboutPage extends StatefulWidget {
 
 class _AboutPageState extends State<AboutPage> {
   final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey();
-  final String _des = 'A better gallery';
-  final String twitterAccount = '@Rainbow59956116';
-  final String weiboAccount = 'Rainbow-Official';
-  final String wechatAccount = 'Rainbow';
-  final String emailAccount = 'rainbowplanet@163.com';
+  final String _des = 'A better gallery for bear group';
+  final String twitterAccount = '@Bearhub';
+  final String weiboAccount = 'Bearhub';
+  final String wechatAccount = 'Bearhub';
+  final String emailAccount = 'Bearhub@gmail.com';
    String _version = '';
   @override
   void initState() {
@@ -38,9 +38,9 @@ class _AboutPageState extends State<AboutPage> {
             SizedBox(height: 60.0),
             Column(
               children: <Widget>[
-                Image.asset('assets/diamond.png'),
+                Image.asset('assets/bear.png',width: 61.2,height: 66.6,),
                 SizedBox(height: 16.0),
-                Text('Rainbow',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+                Text('Bearhub',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color.fromRGBO(0x2f, 0x5a, 0x7f, 1)),),
                 SizedBox(height: 16.0),
                 Text(_des),
               ],
@@ -48,16 +48,11 @@ class _AboutPageState extends State<AboutPage> {
             SizedBox(height: 36,),
             Divider(),
             ListTile(
-              title: Text('Rate For Rainbow'),
+              title: Text('Rate For Bearhub'),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: (){
                 StoreRate.rate(RateType.RateTypeInApp, null);
               },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('Twitter'),
-              trailing: Text(twitterAccount),
             ),
             Divider(),
             ListTile(
@@ -66,8 +61,13 @@ class _AboutPageState extends State<AboutPage> {
             ),
             Divider(),
             ListTile(
-              title: Text('WeChat'),
+              title: Text('WeChat Group'),
               trailing: Text(wechatAccount),
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Twitter'),
+              trailing: Text(twitterAccount),
             ),
             Divider(),
             ListTile(

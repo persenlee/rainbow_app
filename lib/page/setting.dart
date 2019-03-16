@@ -50,7 +50,7 @@ class _SettingPageState extends State<SettingPage> {
               ),
               Divider(),
               ListTile(
-                title: Text('Share Rainbow To Friends'),
+                title: Text('Share Bearhub To Friends'),
                 onTap: () {
                   _share();
                 },
@@ -62,7 +62,7 @@ class _SettingPageState extends State<SettingPage> {
               Divider(),
               ListTile(
                   title: Text(
-                    'About Rainbow'
+                    'About Bearhub'
                   ),
                   trailing:Icon(
                       Icons.arrow_forward_ios,

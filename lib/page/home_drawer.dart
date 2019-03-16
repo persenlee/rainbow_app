@@ -18,7 +18,7 @@ class _HomePageDrawerState extends State<HomeDrawerPage> {
   }
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = Colors.lightBlue;
+    final backgroundColor = Color.fromRGBO(0x2f, 0x5a, 0x7f, 1);
     _refreshUser();
     return Drawer(
       child: MediaQuery.removePadding(

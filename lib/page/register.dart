@@ -51,9 +51,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       SizedBox(height: 80.0),
                       Column(
                         children: <Widget>[
-                          Image.asset('assets/diamond.png'),
+                          Image.asset('assets/bear.png',width: 61.2,height: 66.6,),
                           SizedBox(height: 16.0),
-                          Text('Rainbow'),
+                          Text('Bearhub',style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: Color.fromRGBO(0x2f, 0x5a, 0x7f, 1)),),
                         ],
                       ),
                       SizedBox(height: 90.0),
@@ -121,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           key: _registerButtonKey,
                           child: Text('Sign Up'),
                           textColor: Colors.white,
-                          color: Colors.lightBlueAccent,
+                          color: Color.fromRGBO(0x2f, 0x5a, 0x7f, 1),
                           onPressed: () {
                             _doRegister();
                           },

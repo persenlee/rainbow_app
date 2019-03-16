@@ -25,7 +25,14 @@ class RainbowApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Rainbow',
+      title: 'Bearhub',
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          brightness: Brightness.dark,
+          color: Color.fromRGBO(0x2f, 0x5a, 0x7f, 1)
+        ),
+        
+      ),
       home: HomePage(),
       onGenerateRoute: _getRoute,
     );
