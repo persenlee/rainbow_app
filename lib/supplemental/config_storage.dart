@@ -6,6 +6,19 @@ import 'package:Rainbow/api/base_api.dart';
 
 class ConfigStorage{
   static ConfigStorage _instance;
+  final _tagsJsonArray = [
+    {'id' : 1,'name': 'muscle'},
+    {'id' : 2,'name': 'chubby'},
+    {'id' : 3,'name': 'daddy'},
+    {'id' : 4,'name': 'suit'},
+    ];
+  final _reportsJsonArray = [
+    {'id' : 1,'reason' : 'low quality'},
+    {'id' : 2,'reason' : 'no bear in picture'},
+    {'id' : 3,'reason' : 'infringement'},
+    {'id' : 4,'reason' : 'porn'},
+    {'id' : 5,'reason' : 'uncomfortable'},
+  ];
   String _config;
   List<Tag> _tags;
   List<Report> _reports;
@@ -40,6 +53,13 @@ class ConfigStorage{
       }).toList();
       _reports = reportsList.map((map){
         return Report.fromJson(map);
+      }).toList();
+    } else {
+      _tags = _tagsJsonArray.map((Map<String,dynamic>json){
+        return Tag.fromJson(json);
+      }).toList();
+      _reports =_reportsJsonArray.map((Map<String,dynamic>json){
+        return Report.fromJson(json);
       }).toList();
     }
   }

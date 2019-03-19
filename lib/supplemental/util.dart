@@ -29,7 +29,7 @@ class Util {
         baseUrl = 'https://test.rainbowplanet.club';
         break;
       case BaseUrlMode.Release:
-        baseUrl = 'https://test.rainbowplanet.club';
+        baseUrl = 'https://www.rainbowplanet.club';
         break;
       default:
     }
