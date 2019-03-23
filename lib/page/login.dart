@@ -133,6 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                             setState(() {
                               _usernameController =
                                   TextEditingController(text: result);
+                              _email =result;
                             });
                           });
                         },

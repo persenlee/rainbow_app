@@ -16,7 +16,7 @@ class _AboutPageState extends State<AboutPage> {
   final String twitterAccount = '@Bearhub';
   final String weiboAccount = 'Bearhub';
   final String wechatAccount = 'Bearhub';
-  final String emailAccount = 'Bearhub@gmail.com';
+  final String emailAccount = 'Bearhub01@gmail.com';
    String _version = '';
   @override
   void initState() {

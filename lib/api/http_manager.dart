@@ -4,7 +4,6 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:Rainbow/supplemental/user_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
 import 'package:Rainbow/supplemental/util.dart';
 import 'package:flutter/services.dart';
 
@@ -23,8 +22,8 @@ class HttpManager {
     httpClient.options.baseUrl = baseUrl;
     httpClient.options.contentType =
         ContentType.parse("application/x-www-form-urlencoded");
-    httpClient.options.connectTimeout = 5000; //5s
-    httpClient.options.receiveTimeout = 5000;
+    httpClient.options.connectTimeout = 60000; //5s
+    httpClient.options.receiveTimeout = 60000;
     httpClient.interceptors.add(LogInterceptor(responseBody: true)); 
   }
 
@@ -41,7 +40,9 @@ class HttpManager {
         String storedBaseUrl = Util.baseUrlForMode(mode);
         _instance.baseUrl = storedBaseUrl;
         _instance.httpClient.options.baseUrl = storedBaseUrl;
-        if (mode ==BaseUrlMode.Test ||
+        if (mode ==BaseUrlMode.Test) {
+          await _instance._addTestSSLCertVerify();
+        } else if (
             mode ==BaseUrlMode.Release) {
           await _instance._addSSLCertVerify();
         }
@@ -54,8 +55,20 @@ class HttpManager {
     return _instance;
   }
 
-  _addSSLCertVerify() async{
+  _addTestSSLCertVerify() async{
     final String pemStr = await rootBundle.loadString('assets/server.pem');
+      (httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
+        client.badCertificateCallback=(X509Certificate cert, String host, int port){
+          if(cert.pem==pemStr){ // Verify the certificate
+              return true; 
+          }
+          return false;
+        };
+      };
+  }
+
+  _addSSLCertVerify() async{
+    final String pemStr = await rootBundle.loadString('assets/bearhub.pem');
       (httpClient.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate  = (client) {
         client.badCertificateCallback=(X509Certificate cert, String host, int port){
           if(cert.pem==pemStr){ // Verify the certificate
@@ -78,9 +91,11 @@ class HttpManager {
     if (result) {
       this.baseUrl =baseUrl;
       httpClient.options.baseUrl = baseUrl;
-      if (mode ==BaseUrlMode.Test ||
-          mode ==BaseUrlMode.Release) {
-        await _addSSLCertVerify();
+      if (mode ==BaseUrlMode.Test) {
+          await _instance._addTestSSLCertVerify();
+      } else if (
+            mode ==BaseUrlMode.Release) {
+          await _instance._addSSLCertVerify();
       } else {
         _removeSSLCertVerify();
       }
