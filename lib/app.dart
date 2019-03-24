@@ -35,6 +35,7 @@ class RainbowApp extends StatelessWidget {
       ),
       home: HomePage(),
       onGenerateRoute: _getRoute,
+      debugShowCheckedModeBanner: false,
     );
   }
 

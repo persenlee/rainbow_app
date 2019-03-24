@@ -94,7 +94,7 @@ class _SettingPageState extends State<SettingPage> {
 
   _share() async{
     String url = await Util.absoluteUrlForPath('system/landing');
-    Util.share('Share Rainbow To Friends', url, null);
+    Util.share('Share Bearhub To Friends.\nMore than 10,000 bear pictures and update everyday.', url, null);
   }
 
   _about(BuildContext context){

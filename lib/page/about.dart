@@ -51,7 +51,7 @@ class _AboutPageState extends State<AboutPage> {
               title: Text('Rate For Bearhub'),
               trailing: Icon(Icons.arrow_forward_ios),
               onTap: (){
-                StoreRate.rate(RateType.RateTypeInApp, null);
+                StoreRate.rate(RateType.RateType2Store, '1457436405');
               },
             ),
             Divider(),

@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
     }
     _isLoading = true;
     _page =_bottomRefresh ? _page : 1;
-    var response = await FeedAPI.getFeeds(_page, 10);
+    var response = await FeedAPI.getFeeds(_page, 20);
     _isLoading = false;
     List<Feed> feeds = response.result;
       if (feeds != null && feeds.length > 0) {
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
     _isLoading =true;
     });
-    FeedAPI.getFeeds(_page, 10).then((response) {
+    FeedAPI.getFeeds(_page, 20).then((response) {
       List<Feed> feeds = response.result;
       if (feeds != null && feeds.length > 0) {
         setState(() {
@@ -233,6 +233,11 @@ class _HomePageState extends State<HomePage> {
                 child: Text('Test[Remote]'),
                 onPressed: () {
                   Navigator.pop(context, BaseUrlMode.Test);
+                }),
+            CupertinoActionSheetAction(
+                child: Text('Release[Remote]'),
+                onPressed: () {
+                  Navigator.pop(context, BaseUrlMode.Release);
                 }),
           ]);
     }
