@@ -6,10 +6,14 @@ import 'package:Rainbow/supplemental/user_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:Rainbow/supplemental/util.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert';
+import 'package:convert/convert.dart';
+import 'package:crypto/crypto.dart';
 
 typedef PLProgressCallback = Function(int received, int total);
 
 class HttpManager {
+  final saltStr = '&*1@!￥8k@j@17U~a';
   static HttpManager _instance;
   final httpClient = new Dio();
   String baseUrl = Util.baseUrlForMode(BaseUrlMode.Release);
@@ -25,6 +29,8 @@ class HttpManager {
     httpClient.options.connectTimeout = 60000; //5s
     httpClient.options.receiveTimeout = 60000;
     httpClient.interceptors.add(LogInterceptor(responseBody: true)); 
+
+
   }
 
   static sharedInstance() async {
@@ -146,7 +152,8 @@ class HttpManager {
         response = await httpClient.get(url);
       } else {
         Map<String, dynamic> queryParams = new Map<String, dynamic>.from(query);
-        response = await httpClient.get(url, queryParameters: queryParams);
+        String digest = loadDigest(query);
+        response = await httpClient.get(url, queryParameters: queryParams,options: Options(headers: {'Digest' :digest}));
       }
       return response;
     } catch (e) {
@@ -156,11 +163,27 @@ class HttpManager {
 
   post(String url, dynamic data) async {
     try {
-      var response = await httpClient.post(url, data: data);
+      String digest = loadDigest(data);
+      var response = await httpClient.post(url, data: data,options: Options(headers: {'Digest' :digest}));
       return response;
     } catch (e) {
       throw e;
     }
+  }
+
+  loadDigest(Map param) {
+     Map<String,dynamic> tempMap = Map<String,dynamic>.from(param);
+     List keys = tempMap.keys.toList()..sort();
+     String expr = '';
+     for (var key in keys) {
+       var value = tempMap[key];
+       expr += '$key=$value&';
+     }
+     String salt = this.saltStr;
+     expr += 'salt=$salt';
+    var content = new Utf8Encoder().convert(expr);
+    var digest = md5.convert(content);
+    return hex.encode(digest.bytes);
   }
 
   loadResource(String url) async {
